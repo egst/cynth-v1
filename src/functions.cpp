@@ -1,5 +1,5 @@
 /* An implementation file for: */
-#include "functions.hpp"
+#include "rack/functions.hpp"
 
 /* Local libraries: */
 #include "tools.hpp"  // -> Cynth::Tools::compare()

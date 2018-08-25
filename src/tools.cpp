@@ -12,4 +12,5 @@ std::string Cynth::Tools::wcharToString(wchar_t* input) {;
     std::wstring wstr(input);
     std::string output(wstr.begin(), wstr.end());
     return output;
+    // TODO: Delete the original pointer;
 }

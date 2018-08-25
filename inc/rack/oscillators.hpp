@@ -1,9 +1,9 @@
 #pragma once
 
 /* Local libraries: */
-#include "devices.hpp"
+#include "rack/devices.hpp"
 // -> Cynth::InputDevice, Cynth::OutputDevice
-#include "functions.hpp"
+#include "rack/functions.hpp"
 // -> Cynth::WaveFunction, Cynth::SequenceFunction, Cynth::ConversionFunction
 
 namespace Cynth {

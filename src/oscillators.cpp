@@ -1,5 +1,5 @@
 /* An implementation file for: */
-#include "oscillators.hpp"
+#include "rack/oscillators.hpp"
 
 /* Standard Libraries: */
 #include <cmath>    // -> std::roundf (temporary)

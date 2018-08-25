@@ -4,12 +4,18 @@
 #include <vector>
 #include <string>
 
+/* Temporary testing: */
+#define _USE_MATH_DEFINES
+#include <cmath>
+
 /* Windows libraries: */
 // For more info see doc/WASAPI_notes.md
 // Component Object Model:
 #include <objbase.h>
 // Multimedia Device API:
 #include <mmdeviceapi.h>
+// Audio Client:
+#include <audioclient.h>
 
 /* Fix missing PKEYs:
 
@@ -20,6 +26,47 @@ but some more elegant solution would be nice. */
 extern PROPERTYKEY PKEY_Device_FriendlyName;
 
 namespace Cynth {
+
+    /* Temporary testing: */
+    float sin01(float alpha);
+
+    long sin_tmp(long max, float freq, float t);
+    //float sin_minmax_Hz(float min, float max, float freq, float t);
+
+    class Sample {
+    private:
+        std::vector<unsigned char> bytes;
+    
+    public:
+        /* Constructors: */
+        Sample();
+        Sample(int bit_depth);
+
+        /* Mutators: */
+        Sample& operator=(long value); // TODO: Check overflow
+        Sample& operator=(unsigned long value);
+
+        /* Accessors: */
+        unsigned char operator[](int i);
+        unsigned char* data();
+        size_t size();
+    };
+
+    class Buffer {
+    private:
+        std::vector<unsigned char> bytes;
+        int bit_depth;
+
+    public:
+        Buffer(int bit_depth);
+
+        void write(Sample sample);
+        unsigned char* data();
+        size_t size();
+        void clear();
+        void copyTo(unsigned char* ptr_buffer);
+        void moveTo(unsigned char* ptr_buffer);
+    };
 
     namespace WASAPI {
 
@@ -75,6 +122,16 @@ namespace Cynth {
             Interface();
             Interface(interface_t* ptr_instance);
 
+            /* Move & Copy: */
+            // Copy constructor:
+            Interface(const Interface<interface_t>& other);
+            // Copy assignment:
+            Interface<interface_t>& operator=(const Interface<interface_t>& other);
+            // Move constructor:
+            Interface(Interface<interface_t>&& other);
+            // Move assignment:
+            Interface<interface_t>& operator=(Interface<interface_t>&& other);
+
             /* Destructor:
 
             Releases the WASAPI interface instance. */
@@ -120,9 +177,38 @@ namespace Cynth {
             
             Frees the memory allocated by its value. */
             ~PropertyStore();
+            // Move/copy/default constructor and move/copy assignment
+            // are not inherited with explicit destructor:
+            PropertyStore();
+            PropertyStore(IPropertyStore* ptr_instance);
+            PropertyStore(const PropertyStore& other);
+            PropertyStore(PropertyStore&& other);
+            PropertyStore& operator=(const PropertyStore& other);
+            PropertyStore& operator=(PropertyStore&& other);
 
             /* WASAPI methods abstractions: */
             prop_t& getValue(PROPERTYKEY);
+        };
+
+        class RenderClient: public Interface<IAudioRenderClient> {public:
+            /* Constructor: */
+            using Interface<IAudioRenderClient>::Interface;
+
+            /* Friends: */
+            friend class Device;
+            friend class AudioClient;
+        };
+
+        class AudioClient: public Interface<IAudioClient> {
+        public:
+            /* Constructor: */
+            using Interface<IAudioClient>::Interface;
+
+            /* Friends: */
+            friend class Device;
+
+            /* Related WASAPI interfaces: */
+            RenderClient render_client;
         };
 
         /*/ Device: /*/
@@ -132,18 +218,54 @@ namespace Cynth {
             // Display name:
             std::string name;
 
+            /* WASAPI properties: */
+            // TODO: Type aliases needed?
+            REFERENCE_TIME default_device_period;
+            REFERENCE_TIME minimum_device_period;
+            // WAVFORMATEX may contain extra bytes after
+            // to form WAVEFORMATEXTENSIBLE. Number of these extra bytes
+            // is stored in wave_format->cbSize. The extra information
+            // may be needed for further WASAPI methods.
+            // So as not to copy the information manually from memory,
+            // only a pointer is stored to the received WAVEFORMATEX,
+            // which is followed by these potential extra bytes.
+            // TODO: For cleanup, is it needed to delete these extra bytes?
+            WAVEFORMATEX* wave_format;
+            UINT32 buffer_size_frames;
+            INT32 buffer_size_bytes;
+
+            /* WASAPI methods abstractions: */
+            void getDevicePeriod();
+            void getBufferSize();
+            void getMixFormat();
+            void checkFormatSupport();
+            AudioClient getAudioClient();
+            void initAudioClient();
+            RenderClient getRenderClient();
+
         public:
             /* Constructor: */
-            using Interface<IMMDevice>::Interface;
+            Device(IMMDevice* ptr_instance = nullptr);
 
-            /* Friemds: */
+            /* Audio Client: */
+            // Activate and setup Audio Client:
+            void setup();
+            // Release AudioClient:
+            void releaseAudioClient();
+
+            /* Friends: */
             friend class Control;
 
             /* Mutators: */
             void setName(std::string name);
 
+            /* Related WASAPI interfaces: */
+            // Audio Client:
+            AudioClient audio_client;
+
             /* WASAPI methods abstractions: */
             PropertyStore openPropertyStore(DWORD access = STGM_READ);
+            std::string getId();
         };
 
         /*/ Device Collection: /*/
@@ -153,7 +275,7 @@ namespace Cynth {
             using Interface<IMMDeviceCollection>::Interface;
 
             /* WASAPI methods abstractions: */
-            UINT getCount();
+            int getCount();
             Device item(UINT i);
 
             //tmp:
@@ -174,6 +296,9 @@ namespace Cynth {
             DeviceCollection getDeviceCollection(
                 EDataFlow data_flow = EDataFlow::eRender,
                 DWORD mask = DEVICE_STATE_ACTIVE);
+            Device getDefaultAudioEndpoint(
+                EDataFlow data_flow = EDataFlow::eRender,
+                ERole role = ERole::eMultimedia);
         };
 
         class Control {
@@ -186,18 +311,17 @@ namespace Cynth {
             // each receives audio stream as a single channel.
             std::vector<int> active_rendering_devices;
 
-            /* Devices interaction: */
-            // Initiate Device's IMMDevice interface:
-            void initDevice(int id);
-            // Release Device's IMMDevice interface:
-            void deinitDevice(int id);
+            /* Mutators: */
+            void clearRenderingDevices();
 
         public:
             /* Constructor:
             
             Initializes COM library.
             Gets all available rendering devices from IMMDeviceEnumerator
-            and saves them in rendering_devices vector. */
+            and saves them in rendering_devices vector.
+            Saves the default rendering device in active_rendering_devices
+            vector. */
             Control();
 
             /* Fix missing PKEYs: */
@@ -206,10 +330,13 @@ namespace Cynth {
             /* Accessors: */
             // Get available devices:
             std::vector<std::string> getRenderingDevicesNames();
+            int getRenderingDevicesCount();
 
             /* Mutators: */
             // Set active rendering devices:
             void setRenderingDevices(std::vector<int> ids);
+            void setRenderingDevice(int id);
+            void addRenderingDevice(int id);
         };
 
     }

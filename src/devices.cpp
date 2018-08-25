@@ -1,7 +1,5 @@
 /* An implementation file for: */
-#include "devices.hpp"
-
-#include "functions.hpp" // -> Cynth::ConversionFunction
+#include "rack/devices.hpp"
 
 /* -- Generic Input Device: ------------------------------------------------- */
 

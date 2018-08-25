@@ -9,12 +9,19 @@
 #include "tools.hpp"
 #include "config.hpp"
 #include "logger.hpp"
-#include "setup.hpp"
+
+/* Environments: */
+#ifdef CYNTH_ENV_CLI
+#include "env_cli/cli.hpp"
+#include "env_cli/script.hpp"
+#endif
 
 /* Audio APIs: */
-#include "WASAPI.hpp" // For Windows
+#ifdef CYNTH_API_WASAPI
+#include "api/wasapi.hpp"
+#endif
 
 /* Synthesizer devices abstraction: */
-#include "functions.hpp"
-#include "devices.hpp"
-#include "oscillators.hpp"
+#include "rack/functions.hpp"
+#include "rack/devices.hpp"
+#include "rack/oscillators.hpp"

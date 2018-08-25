@@ -27,8 +27,9 @@ extern PROPERTYKEY PKEY_Device_FriendlyName;
 
 namespace Cynth {
 
-    /* Temporary testing: */
-    float sin01(float alpha);
+/* -- Temporary testing: ---------------------------------------------------- */
+
+    float sin_sub(float t);
 
     long sin_tmp(long max, float freq, float t);
     //float sin_minmax_Hz(float min, float max, float freq, float t);
@@ -49,7 +50,7 @@ namespace Cynth {
         /* Accessors: */
         unsigned char operator[](int i);
         unsigned char* data();
-        size_t size();
+        std::size_t size();
     };
 
     class Buffer {
@@ -62,11 +63,13 @@ namespace Cynth {
 
         void write(Sample sample);
         unsigned char* data();
-        size_t size();
+        std::size_t size();
         void clear();
         void copyTo(unsigned char* ptr_buffer);
         void moveTo(unsigned char* ptr_buffer);
     };
+
+/* -------------------------------------------------------------------------- */
 
     namespace WASAPI {
 

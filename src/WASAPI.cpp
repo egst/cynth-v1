@@ -20,16 +20,13 @@
 
 /* -- Temporary testing: ---------------------------------------------------- */
 
-float Cynth::sin01(float alpha) {
-    return std::sin(alpha);
+float Cynth::sin_sub(float t) {
+    return 1 * std::sin(t) + 0;
+    //return 0.5 * std::sin(alpha) + 0.5;
 }
 
-/*unsigned long Cynth::sin_minmax_Hz(unsigned long max, float freq, float t) {
-    return max * sin01(t * freq * 2 * M_PI);
-}*/
-
 long Cynth::sin_tmp(long max, float freq, float t) {
-    return max / 2 * Cynth::sin01(t * freq * 2 * M_PI);
+    return max / 2 * Cynth::sin_sub(t * freq * 2 * M_PI);
 }
 
 Cynth::Sample::Sample() {}
@@ -60,7 +57,7 @@ unsigned char* Cynth::Sample::data() {
     return this->bytes.data();
 }
 
-size_t Cynth::Sample::size() {
+std::size_t Cynth::Sample::size() {
     return this->bytes.size();
 }
 
@@ -79,7 +76,7 @@ unsigned char* Cynth::Buffer::data() {
     return this->bytes.data();
 }
 
-size_t Cynth::Buffer::size() {
+std::size_t Cynth::Buffer::size() {
     return this->bytes.size();
 }
 
@@ -481,7 +478,7 @@ Cynth::WASAPI::Control::Control() {
             this->setRenderingDevice(i);
     }
 
-    /* Temporary testing: */
+/* -- Temporary testing: ---------------------------------------------------- */
 
     Cynth::WASAPI::Device& active_rendering_device
         = this->rendering_devices[this->active_rendering_devices[0]];
@@ -504,13 +501,11 @@ Cynth::WASAPI::Control::Control() {
     bool first = true;
     BYTE* ptr_buffer;
     DWORD flags = 0;
-    //std::vector<Cynth::Sample> samples(buffer_size_samples);
     std::vector<unsigned long> samples(buffer_size_samples);
     int bit_depth = active_rendering_device.wave_format->wBitsPerSample;
     Sample sample(bit_depth);
     Cynth::Buffer buffer(bit_depth);
 	while (true) {
-    //for(int k = 0; k < 1; k++) {
 		std::this_thread::sleep_for(
             std::chrono::milliseconds(buffer_period_ms));
 
@@ -524,34 +519,13 @@ Cynth::WASAPI::Control::Control() {
 		if (FAILED(hr))
             Cynth::Logger::errHRESULT(hr);
 
-        #if 0
-        for(int i = 0; i < (int) buffer_size_samples; i += 2) {
-            float t
-                = (float) (i + j * buffer_size_samples)
-                / active_rendering_device.wave_format->nSamplesPerSec;
-            int bit_depth
-                = active_rendering_device.wave_format->wBitsPerSample;
-            //Cynth::Sample sample(bit_depth);
-            //sample = Cynth::sin_minmax_Hz(std::pow(2, bit_depth) - 1, 800, t);
-            unsigned long sample = Cynth::sin_minmax_Hz(std::pow(2, bit_depth) - 1, 400, t);
-            samples[i] = sample;
-            samples[i + 1] = sample;
-
-            //std::cout << sample / 100000 << " ";
-            /*for(int m = 0; m < (int) samples[i].bytes.size(); m++) {
-                std::cout << (unsigned long) samples[i].bytes[m] << " ";
-            }
-            std::cout << std::endl;*/
-        }
-        j++;
-        #endif
         unsigned long buffer_size_frames
-            = active_rendering_device.buffer_size_frames;
+            = active_rendering_device.buffer_size_frames - padding;
         for (unsigned long i = 0; i < buffer_size_frames; i++) {
             float t
                 = (float) 2 * (i + j * buffer_size_frames)
                 / active_rendering_device.wave_format->nSamplesPerSec;
-            sample = Cynth::sin_tmp(std::pow(2, bit_depth - 1) - 1, 40, t);
+            sample = Cynth::sin_tmp(std::pow(2, bit_depth - 1) - 1, 440, t);
             buffer.write(sample); // i   Left channel
             buffer.write(sample); // i+1 Right channel
         }
@@ -578,6 +552,7 @@ Cynth::WASAPI::Control::Control() {
 	hr = active_rendering_device.audio_client->Stop();  // Stop playing.
 	if (FAILED(hr))
         Cynth::Logger::errHRESULT(hr);
+/* -------------------------------------------------------------------------- */
 }
 
 std::vector<std::string>

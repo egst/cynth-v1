@@ -29,14 +29,16 @@ namespace Cynth {
 
 /* -- Temporary testing: ---------------------------------------------------- */
 
-    float sin_sub(float t);
+    float wave_f(float t);
 
     long sin_tmp(long max, float freq, float t);
+    float sin_float(float freq, float t);
     //float sin_minmax_Hz(float min, float max, float freq, float t);
 
     class Sample {
     private:
         std::vector<unsigned char> bytes;
+        int bit_depth;
     
     public:
         /* Constructors: */
@@ -46,6 +48,8 @@ namespace Cynth {
         /* Mutators: */
         Sample& operator=(long value); // TODO: Check overflow
         Sample& operator=(unsigned long value);
+        Sample& operator=(float value);
+        Sample& operator=(double value);
 
         /* Accessors: */
         unsigned char operator[](int i);

@@ -17,34 +17,58 @@
 #include <thread> //tmp?
 #include <chrono> //tmp?
 #include <cstring> //tmp?
+#include <ksmedia.h> //tmp?
 
 /* -- Temporary testing: ---------------------------------------------------- */
 
-float Cynth::sin_sub(float t) {
-    return 1 * std::sin(t) + 0;
-    //return 0.5 * std::sin(alpha) + 0.5;
+float Cynth::wave_f(float t) {
+    //return 1;
+    //return std::sin(t);
+    //return (1 / M_PI) * std::fmod(t, M_PI);
+    return 0.5 * std::sin(t) + 0.5;
+}
+long Cynth::sin_tmp(long max, float freq, float t) {
+    return max / 2 * Cynth::wave_f(t * freq * 2 * M_PI);
+    //return std::sin(t * freq * 2 * M_PI);
 }
 
-long Cynth::sin_tmp(long max, float freq, float t) {
-    return max / 2 * Cynth::sin_sub(t * freq * 2 * M_PI);
+float Cynth::sin_float(float freq, float t) {
+    return std::sin(t * freq * 2 * M_PI);
+    //return std::sin(t * freq * 2 * M_PI);
 }
 
 Cynth::Sample::Sample() {}
 
-Cynth::Sample::Sample(int bit_depth) {
+Cynth::Sample::Sample(int bit_depth): bit_depth(bit_depth) {
     if (bit_depth % 8 != 0)
         Cynth::Logger::errCynth("Wrong bit depth.");
     this->bytes.resize(bit_depth / 8);
 }
 
 Cynth::Sample& Cynth::Sample::operator=(unsigned long value) {
-    value <<= (sizeof(value) - this->bytes.size()) * 8;
     std::memcpy(this->bytes.data(), &value, this->bytes.size());
     return *this;
 }
 
 Cynth::Sample& Cynth::Sample::operator=(long value) {
     value <<= (sizeof(value) - this->bytes.size()) * 8;
+    std::memcpy(this->bytes.data(), &value, this->bytes.size());
+    return *this;
+}
+
+Cynth::Sample& Cynth::Sample::operator=(float value) {
+    if (sizeof(value) != this->bytes.size())
+        Cynth::Logger::errCynth(
+            "Unnable to convert a value to the sample bit depth.");
+    std::memcpy(this->bytes.data(), &value, this->bytes.size());
+    return *this;
+}
+
+Cynth::Sample& Cynth::Sample::operator=(double value) {
+    Cynth::Logger::log(std::to_string(sizeof(value)));
+    if (sizeof(value) != this->bytes.size())
+        Cynth::Logger::errCynth(
+            "Unnable to convert a value to the sample bit depth.");
     std::memcpy(this->bytes.data(), &value, this->bytes.size());
     return *this;
 }
@@ -248,6 +272,13 @@ void Cynth::WASAPI::Device::setup() {
     this->audio_client = this->getAudioClient();
     this->audio_client.autoRelease();
     this->getMixFormat();
+    /*WAVEFORMATEXTENSIBLE* ptr_wave_format_extensible
+        = (WAVEFORMATEXTENSIBLE*) this->wave_format;
+    std::string sub_format;
+    sub_format
+        = Cynth::Tools::guidToString(ptr_wave_format_extensible->SubFormat);
+    Cynth::Logger::log(sub_format);
+    Cynth::Logger::errCynth("STOP");*/
     this->checkFormatSupport();
     this->getDevicePeriod();
     this->initAudioClient();
@@ -329,16 +360,6 @@ void Cynth::WASAPI::Device::getBufferSize() {
         this->buffer_size_frames
         * this->wave_format->nChannels
         * (this->wave_format->wBitsPerSample / 8);
-    Cynth::Logger::log((int) buffer_size_frames);
-    Cynth::Logger::log((int) buffer_size_bytes);
-    Cynth::Logger::log((int) this->default_device_period);
-    Cynth::Logger::log((int) this->wave_format->nAvgBytesPerSec);
-    Cynth::Logger::log((int) this->wave_format->nSamplesPerSec);
-    /*
-    Requested buffer time: 0.01 s
-    Resulting buffer size: 1056 frames, 8448 bytes
-    Resulting buffer time: 0.022 s or 0.044 s?
-    */
 }
 
 void Cynth::WASAPI::Device::checkFormatSupport() {
@@ -488,13 +509,9 @@ Cynth::WASAPI::Control::Control() {
         / (float) active_rendering_device.buffer_size_frames;
     std::cout << "freq: " << freq << std::endl;
     
-    float buffer_period_s
-        = (float) (active_rendering_device.buffer_size_frames
-        * active_rendering_device.wave_format->nChannels)
-        / active_rendering_device.wave_format->nSamplesPerSec;
-    
-    int buffer_period_ms = buffer_period_s * 1000;
-    Cynth::Logger::log(buffer_period_s);
+    int buffer_period_ms
+        = active_rendering_device.default_device_period / 10000;
+    Cynth::Logger::log(buffer_period_ms);
 
     UINT32 buffer_size_samples = 2 * active_rendering_device.buffer_size_frames;
     int j = 0;
@@ -525,13 +542,27 @@ Cynth::WASAPI::Control::Control() {
             float t
                 = (float) 2 * (i + j * buffer_size_frames)
                 / active_rendering_device.wave_format->nSamplesPerSec;
-            sample = Cynth::sin_tmp(std::pow(2, bit_depth - 1) - 1, 440, t);
+            long max = (1 << (bit_depth - 1)) - 1;
+            sample = Cynth::sin_float(400, t);
+            //float* ptr_sample = (float*) sample.data();
+            //std::cout << *ptr_sample << std::endl;
+            /*sample = Cynth::sin_tmp(
+                std::numeric_limits<long>::max(), 40, t);*/
+            //sample = (long) (std::pow(2, bit_depth - 1) - 1) / 2;
+            //sample = (long) 0x40000000;
             buffer.write(sample); // i   Left channel
             buffer.write(sample); // i+1 Right channel
         }
         j++;
 
+        //buffer.clear();
         buffer.moveTo(ptr_buffer);
+        /*float* ptr_sample = (float*) ptr_buffer;
+        for (unsigned long i = 0; i < buffer_size_frames; i++) {
+            std::cout << *ptr_sample << std::endl;
+            std::cout << *ptr_sample << std::endl;
+            ptr_sample++;
+        }*/
 
 		hr = active_rendering_device.audio_client.render_client->ReleaseBuffer(
             active_rendering_device.buffer_size_frames - padding, flags);

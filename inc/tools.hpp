@@ -1,5 +1,7 @@
 #pragma once
 
+#include "platform.hpp"
+
 #include <string>
 
 namespace Cynth {
@@ -11,5 +13,10 @@ namespace Cynth {
 
         /* wchar conversion: */
         std::string wcharToString(wchar_t* input);
+
+        /* GUID: */
+        #ifdef CYNTH_OS_WINDOWS
+        std::string guidToString(GUID guid);
+        #endif
     }
 }

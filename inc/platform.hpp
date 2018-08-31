@@ -2,7 +2,7 @@
 
 /* Local libraries: */
 // Windows WASAPI:
-#include "api/wasapi.hpp"
+#include "api/wasapi/control.hpp"
 
 /* Manual setup:
 
@@ -38,7 +38,7 @@ Do not edit. The results are based on the manual setup above. */
 #endif
 
 #ifdef CYNTH_API_WASAPI
-#define CYNTH_API Cynth::WASAPI::Control
+#define CYNTH_API Cynth::API::WASAPI::Control
 #else
 #undef CYNTH_PLATFORM_IMPLEMENTED
 #define CYNTH_PLATFORM_IMPLEMENTED false

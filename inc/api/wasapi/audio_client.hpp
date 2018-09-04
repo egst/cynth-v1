@@ -20,6 +20,10 @@ namespace Cynth::API::WASAPI {
 
         /* Related WASAPI interfaces: */
         RenderClient render_client;
+
+        /* WASAPI methods abstractions: */
+        void start();
+        void stop();
     };
 
 }

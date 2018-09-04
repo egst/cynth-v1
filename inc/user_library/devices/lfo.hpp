@@ -11,8 +11,7 @@ namespace Cynth::UserLibrary::Devices {
 
         Used to generade slower waves to modulate properties of other devices.
     /*/
-    class LFO: public Cynth::Rack::Devices::Oscillator<
-        Cynth::PCM::Functions::WaveFunction> {
+    class LFO: public Cynth::Rack::Devices::Oscillator {
     public:
         /* Constructors: */
         // With custom wave function:

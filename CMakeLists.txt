@@ -5,7 +5,7 @@ set(CMAKE_CXX_FLAGS "-Wall")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 set(SOURCES
     ${PROJECT_SOURCE_DIR}/src/api/wasapi/audio_client.cpp
-    ${PROJECT_SOURCE_DIR}/src/api/wasapi/control.cpp
+    ${PROJECT_SOURCE_DIR}/src/api/wasapi/setup.cpp
     ${PROJECT_SOURCE_DIR}/src/api/wasapi/device_collection.cpp
     ${PROJECT_SOURCE_DIR}/src/api/wasapi/device.cpp
     ${PROJECT_SOURCE_DIR}/src/api/wasapi/device_enumerator.cpp
@@ -20,13 +20,16 @@ set(SOURCES
     ${PROJECT_SOURCE_DIR}/src/pcm/functions/wave_functions.cpp
     ${PROJECT_SOURCE_DIR}/src/pcm/buffer.cpp
     ${PROJECT_SOURCE_DIR}/src/pcm/sample.cpp
+    ${PROJECT_SOURCE_DIR}/src/rack/components/receiver_port.cpp
+    ${PROJECT_SOURCE_DIR}/src/rack/components/transmitter_port.cpp
     ${PROJECT_SOURCE_DIR}/src/rack/devices/input_device.cpp
     ${PROJECT_SOURCE_DIR}/src/rack/devices/midi_device.cpp
     ${PROJECT_SOURCE_DIR}/src/rack/devices/oscillator.cpp
     ${PROJECT_SOURCE_DIR}/src/rack/devices/output_device.cpp
-    ${PROJECT_SOURCE_DIR}/src/rack/devices/sound_card.cpp
+    ${PROJECT_SOURCE_DIR}/src/user_library/devices/hub.cpp
     ${PROJECT_SOURCE_DIR}/src/user_library/devices/lfo.cpp
     ${PROJECT_SOURCE_DIR}/src/user_library/devices/sequencer.cpp
+    ${PROJECT_SOURCE_DIR}/src/user_library/devices/sound_card.cpp
     ${PROJECT_SOURCE_DIR}/src/user_library/devices/tone_generator.cpp
     ${PROJECT_SOURCE_DIR}/src/entry.cpp
     ${PROJECT_SOURCE_DIR}/src/logger.cpp

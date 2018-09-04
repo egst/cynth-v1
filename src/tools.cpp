@@ -1,8 +1,9 @@
 /* An implementation file for: */
 #include "tools.hpp"
 
-#include <cmath>  // -> std::fabs()
-#include <limits> // -> std::numeric_limits::epsilon()
+/* Standard libraries: */
+#include <cmath>
+#include <limits>
 
 bool Cynth::Tools::compare(float a, float b) {
     return std::fabs(a - b) < std::numeric_limits<float>::epsilon();

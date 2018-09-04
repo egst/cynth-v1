@@ -2,8 +2,15 @@
 #include "user_library/devices/lfo.hpp"
 
 Cynth::UserLibrary::Devices::LFO::LFO(
-    WaveFunction wave_f,
+    WaveFunction f,
     float freq, // = 1
     float amp, // = 0
     freq_type_t freq_type) // = MF
-    : Oscillator<WaveFunction>(wave_f, freq, amp, freq_type) {}
+    : Oscillator(f, freq, amp, freq_type) {}
+
+Cynth::UserLibrary::Devices::LFO::LFO(
+    wave_func_t f,
+    float freq, // = 1
+    float amp, // = 0
+    freq_type_t freq_type) // = MF
+    : Oscillator(f, freq, amp, freq_type) {}

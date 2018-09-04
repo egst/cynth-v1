@@ -10,19 +10,18 @@ namespace Cynth::UserLibrary::Devices {
 
         Used to generade audible waves.
     /*/
-    class ToneGenerator: public Cynth::Rack::Devices::Oscillator<
-        Cynth::PCM::Functions::WaveFunction> {
+    class ToneGenerator: public Cynth::Rack::Devices::Oscillator {
     public:
         /* Constructors: */
         // With custom wave function:
         ToneGenerator(
-            WaveFunction wave_f,
+            WaveFunction f,
             float freq = 440,
             float amp = 0,
             freq_type_t freq_type = freq_type_t::HZ);
         // With basic wave function:
         ToneGenerator(
-            wave_func_t wave_f,
+            wave_func_t f,
             float freq = 440,
             float amp = 0,
             freq_type_t freq_type = freq_type_t::HZ);

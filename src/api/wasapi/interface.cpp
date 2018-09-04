@@ -59,9 +59,9 @@ Interface<interface_t>& Interface<interface_t>::operator=(
 
 /* Windows libraries: */
 // Audio Client:
-//#include <audioclient.h>
+#include <audioclient.h>
 // Multimedia Device API:
-//#include <mmdeviceapi.h>
+#include <mmdeviceapi.h>
 
 /* Types: */
 template class Interface<IAudioClient>;

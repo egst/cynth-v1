@@ -12,9 +12,11 @@ using namespace Cynth::API::WASAPI;
 using Cynth::Logger;
 
 DeviceEnumerator::DeviceEnumerator() {
-    // TODO: Some errors here.
+    // TODO: Intellisense problems:
+    #ifndef __INTELLISENSE__
     const CLSID CLSID_MMDeviceEnumerator = __uuidof(MMDeviceEnumerator);
     const IID IID_IMMDeviceEnumerator = __uuidof(IMMDeviceEnumerator);
+    #endif
     HRESULT hr = CoCreateInstance(
         CLSID_MMDeviceEnumerator,
         NULL,

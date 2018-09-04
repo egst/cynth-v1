@@ -1,6 +1,8 @@
 #pragma once
 
 /* Local libraries: */
+#include "rack/components/transmitter_port.hpp"
+#include "rack/components/receiver_port.hpp"
 #include "rack/devices/input_device.hpp"
 #include "rack/devices/output_device.hpp"
 #include "pcm/functions/wave_function.hpp"
@@ -12,10 +14,11 @@
 namespace Cynth::Rack::Devices {
 
     /*/ Generic Oscillator device: /*/
-    template<typename function_t>
-    class Oscillator: public InputDevice, public OutputDevice {
+    class Oscillator: public InputDevice {
     protected:
         /* Aliases: */
+        using ReceiverPort = Cynth::Rack::Components::ReceiverPort;
+        using TransmitterPort = Cynth::Rack::Components::TransmitterPort;
         using freq_type_t = Cynth::PCM::Functions::freq_type_t;
         using wave_func_t = Cynth::PCM::Functions::wave_func_t;
         using WaveFunction = Cynth::PCM::Functions::WaveFunction;
@@ -28,20 +31,23 @@ namespace Cynth::Rack::Devices {
         using WaveFs = Cynth::PCM::Functions::WaveFs;
         using ConvFs = Cynth::PCM::Functions::ConvFs;
 
-        /* Properties: */
         // Frequency type:
         freq_type_t freq_type;
-        // Frequency:
-        float freq;
-        // Amplitude:
-        float amp;
 
         /* Wave Function: */
-        function_t func;
-        // Basic wave functions:
+        // Raw function:
+        WaveFunction raw_function;
+        // Modulated function = amp(t) * f(t * freq(t)):
+        WaveFunction mod_function;
+        // Basic wave functions library:
         WaveFs wave_fs;
 
+        /* Default transmitter ports for contant frequency and amplitude: */
+        TransmitterPort freq_transmitter;
+        TransmitterPort amp_transmitter;
+
         /* Frequency conversion function: */
+        // TODO...
         ConversionFunction<float, float> conv_f;
         // Basic conversion functions:
         ConvFs conv_fs;
@@ -50,6 +56,12 @@ namespace Cynth::Rack::Devices {
         float convertFrequency(int input);
     
     public:
+        /* Modulation ports: */
+        // Frequency:
+        ReceiverPort freq_port;
+        // Amplitude:
+        ReceiverPort amp_port;
+
         /* Constructors: */
         // Without wave function:
         Oscillator(
@@ -58,7 +70,7 @@ namespace Cynth::Rack::Devices {
             freq_type_t freq_type);
         // With custom wave function:
         Oscillator(
-            function_t func,
+            WaveFunction func,
             float freq,
             float amp,
             freq_type_t freq_type);
@@ -72,11 +84,8 @@ namespace Cynth::Rack::Devices {
         /* Mutators: */
         void setFrequency(float freq);
         void setAmplitude(float freq);
-        void setFunction(function_t func);
-
-        /* Testing: */
-        float play(float offset);
-        void draw();
+        void setFunction(WaveFunction func);
+        void setFunction(wave_func_t func);
     };
 
 }

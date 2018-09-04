@@ -16,12 +16,13 @@
 //#include "env_cli/script.hpp" // TODO
 #endif
 
-/* Audio APIs: */
+/* Audio APIs setup: */
 #ifdef CYNTH_API_WASAPI
-#include "api/wasapi/control.hpp"
+#include "api/wasapi/setup.hpp"
 #endif
 
 /* Synthesizer devices abstraction: */
+#include "user_library/devices/sound_card.hpp"
 #include "user_library/devices/tone_generator.hpp"
 #include "user_library/devices/sequencer.hpp"
 #include "user_library/devices/lfo.hpp"

@@ -31,7 +31,7 @@ void Cynth::CLI::setup() {
 void Cynth::CLI::printRenderingDevices() {
     std::vector<std::string> device_names;
     device_names = this->audio_API.getRenderingDevicesNames();
-    for(int i = 0; i < device_names.size(); i++) {
+    for (auto& device_name : device_names) {
         std::cout << i << ": " << device_names[i] << std::endl;
     }
 }

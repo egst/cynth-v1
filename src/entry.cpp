@@ -58,9 +58,18 @@ int main(int argc, char* argv[]) {
     return 0;
 }
 #elif defined(CYNTH_ENV_LIB_TESTING)
+using namespace Cynth::UserLibrary::Devices;
+using Cynth::PCM::Functions::wave_func_t;
+using Cynth::PCM::Functions::freq_type_t;
 int main() {
     try {
-        CYNTH_API audio_API;
+        SoundCard sound_card;
+        ToneGenerator tone_generator(wave_func_t::SINE, 220, 1);
+        //LFO lfo(wave_func_t::SINE, 1, 1); // TODO: Frequency types.
+        LFO lfo(wave_func_t::SINE, 10, 1, freq_type_t::HZ);
+        tone_generator.amp_port << lfo.output_port;
+        sound_card.input_port << tone_generator.output_port;
+        sound_card.play();
     }
     /* Different exceptions separated for testing: */
     // Unsuported platform problems:

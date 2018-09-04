@@ -10,13 +10,12 @@ namespace Cynth::UserLibrary::Devices {
 
         Used to generate rhythmic patters of frequency values.
     /*/
-    class Sequencer: public Cynth::Rack::Devices::Oscillator<
-        Cynth::PCM::Functions::SequenceFunction<float>> {
+    class Sequencer: public Cynth::Rack::Devices::Oscillator {
     public:
         /* Constructors: */
         // With custom sequence function:
         Sequencer(
-            SequenceFunction<float> seq_f,
+            WaveFunction f,
             float freq = 1,
             float amp = 0,
             freq_type_t freq_type = freq_type_t::MF);

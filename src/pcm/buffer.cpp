@@ -17,7 +17,7 @@ Buffer::Buffer(int bit_depth): bit_depth(bit_depth) {
 }
 
 void Buffer::write(Sample sample) {
-    for(int i = 0; i < this->bit_depth / 8; i++) {
+    for (int i = 0; i < this->bit_depth / 8; i++) {
         this->bytes.push_back(sample[i]);
     }
 }

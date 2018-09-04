@@ -3,6 +3,10 @@
 /* Local libraries: */
 #include "pcm/functions/wave_function.hpp"
 
+/* Standard libraries: */
+#include <map>
+#include <string>
+
 namespace Cynth::PCM::Functions {
 
     /*/ Basic wave functions: /*/
@@ -19,7 +23,7 @@ namespace Cynth::PCM::Functions {
         // Initializes the functions.
         WaveFs();
 
-        /* Functions: */
+        /* Static Functions: */
         // Sine Wave:
         WaveFunction sine;
         // Square Wave:
@@ -28,6 +32,9 @@ namespace Cynth::PCM::Functions {
         WaveFunction saw;
         // Triangle Wave:
         WaveFunction triangle;
+
+        /* Custom functions container: */
+        std::map<std::string, WaveFunction> custom;
     };
 
 }

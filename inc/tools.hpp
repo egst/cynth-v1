@@ -1,8 +1,16 @@
 #pragma once
 
+/* Local libraries: */
 #include "platform.hpp"
 
+/* Standard libraries: */
 #include <string>
+
+#ifdef CYNTH_OS_WINDOWS
+/* Windows libraries: */
+// Component Object Model:
+#include <combaseapi.h>
+#endif
 
 namespace Cynth {
     /* Implementation tools: */

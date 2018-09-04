@@ -7,6 +7,7 @@
 
 using namespace Cynth::API::WASAPI;
 using Cynth::Logger;
+using byte_t = Cynth::PCM::byte_t;
 
 Device::Device(IMMDevice* ptr_instance) // = nullptr
     : Interface<IMMDevice>(ptr_instance) {}
@@ -21,7 +22,7 @@ void Device::setup() {
     this->getMixFormat();
     // TODO: Get amplitude format.
     /*WAVEFORMATEXTENSIBLE* ptr_wave_format_extensible
-        = (WAVEFORMATEXTENSIBLE*) this->wave_format;
+        = (WAVEFORMATEXTENSIBLE*) this->ptr_wave_format;
     std::string sub_format;
     sub_format
         = Cynth::Tools::guidToString(ptr_wave_format_extensible->SubFormat);
@@ -40,12 +41,17 @@ void Device::getMixFormat() {
         &ptr_mix_format);
     if (FAILED(hr))
         Logger::errHRESULT(hr);
-    this->wave_format = ptr_mix_format;
+    this->ptr_wave_format = ptr_mix_format;
+    this->channel_count = this->ptr_wave_format->nChannels;
+    this->bit_depth = this->ptr_wave_format->wBitsPerSample;
+    this->sample_rate = this->ptr_wave_format->nSamplesPerSec;
 }
 
 AudioClient Device::getAudioClient() {
-    // TODO: Some errors here.
+    // TODO: Problems with intellisense:
+    #ifndef __INTELLISENSE__
     IID IID_IAudioClient = __uuidof(IAudioClient);
+    #endif
     IAudioClient* ptr_IAudioClient;
     HRESULT hr = this->ptr_instance->Activate(
         IID_IAudioClient,
@@ -65,15 +71,17 @@ void Device::initAudioClient() {
         0, // TODO: Check out the flags. // Previously: AUDCLNT_STREAMFLAGS_EVENTCALLBACK
         this->default_device_period, // Previously: minimum_device_period
         0,
-        this->wave_format,
+        this->ptr_wave_format,
         NULL); // TODO: How to generate session GUID?
     if (FAILED(hr))
         Logger::errHRESULT(hr);
 }
 
 RenderClient Device::getRenderClient() {
-    // TODO: Some errors here.
+    // TODO: Intellisense problems:
+    #ifndef __INTELLISENSE__
     const IID IID_IAudioRenderClient = __uuidof(IAudioRenderClient);
+    #endif
     IAudioRenderClient* ptr_IAudioRenderClient;
     HRESULT hr = this->audio_client->GetService(
         IID_IAudioRenderClient,
@@ -108,8 +116,8 @@ void Device::getBufferSize() {
     this->buffer_size_frames = buffer_size;
     this->buffer_size_bytes =
         this->buffer_size_frames
-        * this->wave_format->nChannels
-        * (this->wave_format->wBitsPerSample / 8);
+        * this->ptr_wave_format->nChannels
+        * (this->ptr_wave_format->wBitsPerSample / 8);
 }
 
 void Device::checkFormatSupport() {
@@ -117,7 +125,7 @@ void Device::checkFormatSupport() {
         Logger::errWASAPI(
             "Pointer to COM interface not initialized "
             "before checking format support.");
-    WAVEFORMATEX* ptr_wave_format = this->wave_format;
+    WAVEFORMATEX* ptr_wave_format = this->ptr_wave_format;
     WAVEFORMATEX* ptr_closest_format = nullptr;
     HRESULT hr = this->audio_client->IsFormatSupported(
         AUDCLNT_SHAREMODE_SHARED,
@@ -128,7 +136,7 @@ void Device::checkFormatSupport() {
         Logger::errHRESULT(hr);
     }
     if (ptr_closest_format) {
-        this->wave_format = ptr_closest_format;
+        this->ptr_wave_format = ptr_closest_format;
     }
 }
 
@@ -152,4 +160,86 @@ std::string Device::getId() {
     std::string id_str;
     id_str = Cynth::Tools::wcharToString(id_wchar);
     return id_str;
+}
+
+int Device::getBufferPeriodIn(time_units_t units) {
+    switch(units) {
+    case time_units_t::MS:
+        return this->default_device_period / 1000;
+    case time_units_t::HNS:
+        return this->default_device_period;
+    default:
+        return this->default_device_period;
+    }
+}
+
+int Device::getBufferSizeIn(size_units_t units) {
+    switch(units) {
+    case size_units_t::BYTES:
+        return this->buffer_size_bytes;
+    case size_units_t::FRAMES:
+        return this->buffer_size_frames;
+    case size_units_t::SAMPLES:
+        return this->buffer_size_frames / this->channel_count;
+    }
+}
+
+int Device::getPaddedBufferSizeIn(size_units_t units) {
+    switch(units) {
+    case size_units_t::BYTES:
+        Logger::errCynth("TODO: Padded buffer size in bytes not implemented.");
+    case size_units_t::FRAMES:
+        return this->padded_buffer_size_frames;
+    case size_units_t::SAMPLES:
+        return this->padded_buffer_size_frames / this->channel_count;
+    }
+}
+
+int Device::getPaddedBufferSize() {
+    return this->getPaddedBufferSizeIn(size_units_t::FRAMES);
+}
+
+int Device::getChannelCount() {
+    return this->channel_count;
+}
+
+int Device::getBitDepth() {
+    return this->bit_depth;
+}
+
+int Device::getSampleRate() {
+    return this->sample_rate;
+}
+
+byte_t* Device::getBuffer() {
+    UINT32 padding = 0;
+    HRESULT hr = this->audio_client->GetCurrentPadding(&padding);
+    if (FAILED(hr))
+        Logger::errHRESULT(hr);
+    this->padded_buffer_size_frames = this->buffer_size_frames - padding;
+
+    byte_t* ptr_buffer;
+    hr = this->audio_client.render_client->GetBuffer(
+        this->padded_buffer_size_frames,
+        &ptr_buffer);
+    if (FAILED(hr))
+        Logger::errHRESULT(hr);
+    
+    return ptr_buffer;
+}
+
+void Device::releaseBuffer() {
+    DWORD flags = 0; // TODO
+    HRESULT hr = this->audio_client.render_client->ReleaseBuffer(
+        this->padded_buffer_size_frames, flags);
+    if (FAILED(hr))
+        Logger::errHRESULT(hr);
+}
+
+void Device::start() {
+    this->audio_client.start();
+}
+
+void Device::stop() {
+    this->audio_client.stop();
 }

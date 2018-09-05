@@ -5,6 +5,9 @@
 #include "logger.hpp"
 #include "tools.hpp"
 
+/* Standard libraries: */
+#include <iostream> // Temporary
+
 using namespace Cynth::API::WASAPI;
 using Cynth::Logger;
 using byte_t = Cynth::PCM::byte_t;
@@ -106,6 +109,8 @@ void Device::getDevicePeriod() {
         &this->minimum_device_period);
     if (FAILED(hr))
         Logger::errHRESULT(hr);
+    // Temporary:
+    //this->default_device_period *= 2;
 }
 
 void Device::getBufferSize() {
@@ -165,7 +170,7 @@ std::string Device::getId() {
 int Device::getBufferPeriodIn(time_units_t units) {
     switch(units) {
     case time_units_t::MS:
-        return this->default_device_period / 1000;
+        return this->default_device_period / 10000;
     case time_units_t::HNS:
         return this->default_device_period;
     default:
@@ -181,6 +186,8 @@ int Device::getBufferSizeIn(size_units_t units) {
         return this->buffer_size_frames;
     case size_units_t::SAMPLES:
         return this->buffer_size_frames / this->channel_count;
+    default:
+        return this->buffer_size_frames;
     }
 }
 
@@ -192,6 +199,8 @@ int Device::getPaddedBufferSizeIn(size_units_t units) {
         return this->padded_buffer_size_frames;
     case size_units_t::SAMPLES:
         return this->padded_buffer_size_frames / this->channel_count;
+    default:
+        return this->padded_buffer_size_frames;
     }
 }
 

@@ -12,6 +12,7 @@ namespace Cynth::PCM::Functions {
     /*/ Basic wave functions: /*/
     enum wave_func_t {
         SINE,
+        SINE_POS,
         SQUARE,
         SAW,
         TRIANGLE
@@ -26,6 +27,8 @@ namespace Cynth::PCM::Functions {
         /* Static Functions: */
         // Sine Wave:
         WaveFunction sine;
+        // Sine Wave Positive:
+        WaveFunction sine_pos;
         // Square Wave:
         WaveFunction square;
         // Saw Wave:

@@ -74,6 +74,9 @@ Oscillator::Oscillator(
     case wave_func_t::SINE:
         this->raw_function = this->wave_fs.sine;
         break;
+    case wave_func_t::SINE_POS:
+        this->raw_function = this->wave_fs.sine_pos;
+        break;
     case wave_func_t::SQUARE:
         this->raw_function = this->wave_fs.square;
         break;

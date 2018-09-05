@@ -4,6 +4,8 @@
 /* Standard libraries: */
 #include <iostream>
 #include <exception>
+#define _USE_MATH_DEFINES // -> M_PI
+#include <cmath>
 
 using namespace std;
 
@@ -59,14 +61,21 @@ int main(int argc, char* argv[]) {
 }
 #elif defined(CYNTH_ENV_LIB_TESTING)
 using namespace Cynth::UserLibrary::Devices;
+using Cynth::PCM::Functions::WaveFunction;
+using Cynth::PCM::Functions::WaveFs;
 using Cynth::PCM::Functions::wave_func_t;
 using Cynth::PCM::Functions::freq_type_t;
 int main() {
     try {
         SoundCard sound_card;
-        ToneGenerator tone_generator(wave_func_t::SINE, 220, 1);
+        ToneGenerator tone_generator(wave_func_t::SAW, 100, 0.1);
         //LFO lfo(wave_func_t::SINE, 1, 1); // TODO: Frequency types.
-        LFO lfo(wave_func_t::SINE, 10, 1, freq_type_t::HZ);
+        WaveFs wave_fs_library;
+        WaveFunction wobble;
+        wobble = [wave_fs_library](float offset) -> float {
+            return 0.3 * wave_fs_library.sine(offset) + 0.5;
+        };
+        LFO lfo(wobble, 0.5, 0.5, freq_type_t::HZ);
         tone_generator.amp_port << lfo.output_port;
         sound_card.input_port << tone_generator.output_port;
         sound_card.play();

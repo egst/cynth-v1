@@ -10,12 +10,12 @@ template<typename output_t>
 TimeFunction<output_t>::TimeFunction(def_t def): def(def) {}
 
 template<typename output_t>
-output_t TimeFunction<output_t>::operator() (float offset) {
+output_t TimeFunction<output_t>::operator()(float offset) const {
     return this->def(offset);
 }
 
 template<typename output_t>
-output_t TimeFunction<output_t>::operator() (int offset) {
+output_t TimeFunction<output_t>::operator()(int offset) const {
     return this->def((float) offset);
 }
 

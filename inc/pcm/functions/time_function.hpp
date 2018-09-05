@@ -43,9 +43,9 @@ namespace Cynth::PCM::Functions {
 
         /* Accessors: */
         // Call the function:
-        output_t operator() (float offset);
+        output_t operator() (float offset) const;
         // For int input:
-        output_t operator() (int offset);
+        output_t operator() (int offset) const;
 
         /* Mutators: */
         // Set the function definition:

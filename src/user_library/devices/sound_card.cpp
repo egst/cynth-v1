@@ -5,10 +5,14 @@
 #include "pcm/types.hpp"
 #include "pcm/sample.hpp"
 #include "pcm/buffer.hpp"
+#include "logger.hpp"                       // Temporary
+#include "pcm/functions/wave_functions.hpp" // Temporary
 
 /* Standard libraries: */
 #include <thread>
 #include <chrono>
+#include <cmath>    // Temporary
+#include <iostream> // Temporary
 
 using namespace Cynth::UserLibrary::Devices;
 using CYNTH_API_NS::Device;
@@ -40,10 +44,12 @@ SoundCard::SoundCard(): setup() {
 void SoundCard::play() {
     int periods_passed = 0;
     bool first = true;
-    Sample sample(bit_depth);
-    Buffer buffer(bit_depth);
+    Sample sample(this->bit_depth);
+    Buffer buffer(this->bit_depth);
     byte_t* ptr_buffer;
     int padded_buffer_size_frames;
+
+    Cynth::PCM::Functions::WaveFs wave_fs;
     
 	while (true) {
 		std::this_thread::sleep_for(
@@ -57,7 +63,7 @@ void SoundCard::play() {
             float t
                 = (float) 2 * (i + periods_passed * padded_buffer_size_frames)
                 / this->sample_rate;
-            sample = this->input_port(t);
+            sample = (float) this->input_port(t);
             for (int j = 0; j < this->channel_count; j++)
                 buffer.write(sample);
         }

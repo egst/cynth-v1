@@ -18,6 +18,11 @@ WaveFs::WaveFs() {
         return std::sin(2 * M_PI * offset);
     };
 
+    this->sine_pos = [this](float offset) -> float {
+        //offset = std::fmod(offset, 1);
+        return 0.5 * this->sine(offset) + 0.5;
+    };
+
     this->square = [](float offset) -> float {
         offset = std::fmod(offset, 1);
         if (compare(offset, 0)

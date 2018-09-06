@@ -5,22 +5,6 @@
 
 namespace Cynth::PCM::Functions {
 
-    /*/ Frequency types: /*/
-    enum freq_type_t {
-        // Absolute frequency in Hertz:
-        HZ,
-        // Relative frequency in Measure Fractions:
-        // 1 corresponds to one repetition per measure.
-        // 1/2 to two repetitions per measure.
-        // 2 to one repetition per two measures etc...
-        MF,
-        // Relative frequency in Measures per Minute:
-        MPM,
-        // Relative frequency in Beats per Minute:
-        // One beat corresponds to a fourth note.
-        BPM
-    };
-
     /*/ Generic Time Function:
     
         For a given period offset returns the corresponding function value.

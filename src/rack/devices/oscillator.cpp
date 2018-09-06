@@ -6,7 +6,7 @@
 #include <cmath>    // temporary
 
 using namespace Cynth::Rack::Devices;
-using Cynth::PCM::Functions::WaveFunction;
+using Cynth::UserLibrary::Functions::WaveFunction;
 
 float Oscillator::convertFrequency(float input) {
     return this->conv_f(input);

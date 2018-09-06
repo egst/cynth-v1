@@ -1,7 +1,7 @@
 /* An implementation file for: */
-#include "pcm/functions/wave_function.hpp"
+#include "user_library/functions/wave_function.hpp"
 
-using namespace Cynth::PCM::Functions;
+using namespace Cynth::UserLibrary::Functions;
 
 WaveFunction::WaveFunction(): TimeFunction<float>() {}
 

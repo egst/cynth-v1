@@ -5,8 +5,8 @@
 #include "pcm/types.hpp"
 #include "pcm/sample.hpp"
 #include "pcm/buffer.hpp"
-#include "logger.hpp"                       // Temporary
-#include "pcm/functions/wave_functions.hpp" // Temporary
+#include "logger.hpp"                                // Temporary
+#include "user_library/functions/wave_functions.hpp" // Temporary
 
 /* Standard libraries: */
 #include <thread>
@@ -24,7 +24,7 @@ using sample_t = Cynth::PCM::sample_t;
 using Cynth::PCM::Sample;
 using Cynth::PCM::Buffer;
 
-SoundCard::SoundCard(): setup() {
+SoundCard::SoundCard(): setup(), stop_loop(false) {
     this->ptr_rendering_device
         = &this->setup.getActiveRenderingDevices().front().get();
     // TODO: Deal with multiple rendering devices.
@@ -41,7 +41,12 @@ SoundCard::SoundCard(): setup() {
     this->sample_rate = this->ptr_rendering_device->getSampleRate();
 }
 
-void SoundCard::play() {
+void SoundCard::waitForBuffer() {
+    std::this_thread::sleep_for(
+        std::chrono::milliseconds(this->buffer_period_ms / 2));
+}
+
+void SoundCard::playLoop() {
     int periods_passed = 0;
     bool first = true;
     Sample sample(this->bit_depth);
@@ -49,11 +54,11 @@ void SoundCard::play() {
     byte_t* ptr_buffer;
     int padded_buffer_size_frames;
 
-    Cynth::PCM::Functions::WaveFs wave_fs;
+    Cynth::UserLibrary::Functions::WaveFs wave_fs;
     
-	while (true) {
-		std::this_thread::sleep_for(
-            std::chrono::milliseconds(this->buffer_period_ms / 2));
+	while (!this->stop_loop) {
+        // Wait in background:
+		std::thread wait(SoundCard::waitForBuffer, this);
 
         ptr_buffer = this->ptr_rendering_device->getBuffer();
         padded_buffer_size_frames
@@ -71,6 +76,9 @@ void SoundCard::play() {
 
         buffer.moveTo(ptr_buffer);
 
+        // Keep waiting:
+        wait.join();
+        // Then release the buffer:
 		this->ptr_rendering_device->releaseBuffer();
 
         if (first) {
@@ -80,7 +88,23 @@ void SoundCard::play() {
 	}
 
     std::this_thread::sleep_for(
-            std::chrono::milliseconds(buffer_period_ms / 2));
+            std::chrono::milliseconds(this->buffer_period_ms / 2));
 
 	this->ptr_rendering_device->stop();
+}
+
+void SoundCard::play() {
+    // Start the loop:
+    this->stop_loop = false;
+    std::thread loop(SoundCard::playLoop, this);
+
+    std::cout << "Press any key to stop. ";
+    int test;
+    std::cin.get();
+    std::cin.get();
+
+    // Stop the loop:
+    this->stop_loop = true;
+    // Let the thread finish before going out of scope:
+    loop.join();
 }

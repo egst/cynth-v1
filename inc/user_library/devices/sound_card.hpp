@@ -6,6 +6,9 @@
 #include "api/device.hpp"
 #include "rack/devices/output_device.hpp"
 
+/* Standard libraries: */
+#include <atomic>
+
 namespace Cynth::UserLibrary::Devices {
 
     class SoundCard: public Cynth::Rack::Devices::OutputDevice {
@@ -20,6 +23,10 @@ namespace Cynth::UserLibrary::Devices {
         int channel_count;
         int bit_depth;
         int sample_rate;
+
+        std::atomic<bool> stop_loop;
+        void playLoop();
+        void waitForBuffer();
         
     public:
         /* Constructor: */

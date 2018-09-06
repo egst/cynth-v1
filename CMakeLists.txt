@@ -14,10 +14,7 @@ set(SOURCES
     ${PROJECT_SOURCE_DIR}/src/api/wasapi/render_client.cpp
     ${PROJECT_SOURCE_DIR}/src/pcm/functions/conversion_function.cpp
     ${PROJECT_SOURCE_DIR}/src/pcm/functions/conversion_functions.cpp
-    ${PROJECT_SOURCE_DIR}/src/pcm/functions/sequence_function.cpp
     ${PROJECT_SOURCE_DIR}/src/pcm/functions/time_function.cpp
-    ${PROJECT_SOURCE_DIR}/src/pcm/functions/wave_function.cpp
-    ${PROJECT_SOURCE_DIR}/src/pcm/functions/wave_functions.cpp
     ${PROJECT_SOURCE_DIR}/src/pcm/buffer.cpp
     ${PROJECT_SOURCE_DIR}/src/pcm/sample.cpp
     ${PROJECT_SOURCE_DIR}/src/rack/components/receiver_port.cpp
@@ -31,6 +28,9 @@ set(SOURCES
     ${PROJECT_SOURCE_DIR}/src/user_library/devices/sequencer.cpp
     ${PROJECT_SOURCE_DIR}/src/user_library/devices/sound_card.cpp
     ${PROJECT_SOURCE_DIR}/src/user_library/devices/tone_generator.cpp
+    ${PROJECT_SOURCE_DIR}/src/user_library/functions/sequence_function.cpp
+    ${PROJECT_SOURCE_DIR}/src/user_library/functions/wave_function.cpp
+    ${PROJECT_SOURCE_DIR}/src/user_library/functions/wave_functions.cpp
     ${PROJECT_SOURCE_DIR}/src/entry.cpp
     ${PROJECT_SOURCE_DIR}/src/logger.cpp
     ${PROJECT_SOURCE_DIR}/src/tools.cpp)

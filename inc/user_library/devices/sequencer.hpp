@@ -2,7 +2,7 @@
 
 /* Local libraries: */
 #include "rack/devices/oscillator.hpp"
-#include "pcm/functions/sequence_function.hpp"
+#include "user_library/functions/sequence_function.hpp"
 
 namespace Cynth::UserLibrary::Devices {
 

@@ -1,5 +1,5 @@
 /* An implementation file for: */
-#include "pcm/functions/wave_functions.hpp"
+#include "user_library/functions/wave_functions.hpp"
 
 /* Local libraries: */
 #include "tools.hpp"
@@ -8,7 +8,7 @@
 #define _USE_MATH_DEFINES // -> M_PI
 #include <cmath>
 
-using namespace Cynth::PCM::Functions;
+using namespace Cynth::UserLibrary::Functions;
 using Cynth::Tools::compare;
 
 WaveFs::WaveFs() {

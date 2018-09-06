@@ -26,6 +26,7 @@
 #include "user_library/devices/tone_generator.hpp"
 #include "user_library/devices/sequencer.hpp"
 #include "user_library/devices/lfo.hpp"
-/* Temporary: */
-#include "pcm/functions/wave_function.hpp"
-#include "pcm/functions/wave_functions.hpp"
+#include "user_library/functions/types.hpp"
+#include "user_library/functions/wave_function.hpp"
+#include "user_library/functions/wave_functions.hpp"
+#include "user_library/functions/sequence_function.hpp"

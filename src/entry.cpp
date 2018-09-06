@@ -60,25 +60,52 @@ int main(int argc, char* argv[]) {
     return 0;
 }
 #elif defined(CYNTH_ENV_LIB_TESTING)
+
 using namespace Cynth::UserLibrary::Devices;
-using Cynth::PCM::Functions::WaveFunction;
-using Cynth::PCM::Functions::WaveFs;
-using Cynth::PCM::Functions::wave_func_t;
-using Cynth::PCM::Functions::freq_type_t;
+using namespace Cynth::UserLibrary::Functions;
+using Cynth::UserLibrary::Functions::wave_func_t;
+using Cynth::UserLibrary::Functions::freq_type_t;
+
 int main() {
     try {
-        SoundCard sound_card;
-        ToneGenerator tone_generator(wave_func_t::SAW, 100, 0.1);
-        //LFO lfo(wave_func_t::SINE, 1, 1); // TODO: Frequency types.
+
+        /* Workflow example: */
+
+        // Library of basic wave functions:
         WaveFs wave_fs_library;
+
+        // Sound card provides streaming to the output device:
+        SoundCard sound_card;
+
+        // Tone generator generates audible sound:
+        ToneGenerator tone_generator(wave_func_t::SINE, 450, 0.1);
+
+        // Custom wave function definition:
         WaveFunction wobble;
         wobble = [wave_fs_library](float offset) -> float {
-            return 0.3 * wave_fs_library.sine(offset) + 0.5;
+            return 300 * (0.3 * wave_fs_library.sine(offset) + 0.5);
         };
+
+        // LFO generates a wave function for modulating other devices:
         LFO lfo(wobble, 0.5, 0.5, freq_type_t::HZ);
-        tone_generator.amp_port << lfo.output_port;
+        // TODO: Frequency types.
+
+        // LFO controls tone generator's amplitude:
+        //tone_generator.amp_port << lfo.output_port;
+
+        // Tone generator outputs resulting modulated sound to sound card:
         sound_card.input_port << tone_generator.output_port;
-        sound_card.play();
+
+        // Sound card plays its input through the output device:
+        //sound_card.play();
+        float freq_input;
+        while (true) {
+            std::cout << "Frequency: ";
+            std::cin >> freq_input;
+            tone_generator.setFrequency(freq_input);
+            sound_card.play();
+        }
+
     }
     /* Different exceptions separated for testing: */
     // Unsuported platform problems:

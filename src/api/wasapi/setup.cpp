@@ -8,7 +8,7 @@
 #include "api/wasapi/device.hpp"
 #include "pcm/sample.hpp"                   // temporary testing
 #include "pcm/buffer.hpp"                   // temporary testing
-#include "pcm/functions/wave_functions.hpp" // temporary testing
+#include "user_library/functions/wave_functions.hpp" // temporary testing
 
 /* Standard libraries: */
 #include <iostream> // temporary testing

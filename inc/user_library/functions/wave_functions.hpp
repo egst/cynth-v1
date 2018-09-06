@@ -1,22 +1,13 @@
 #pragma once
 
 /* Local libraries: */
-#include "pcm/functions/wave_function.hpp"
+#include "user_library/functions/wave_function.hpp"
 
 /* Standard libraries: */
 #include <map>
 #include <string>
 
-namespace Cynth::PCM::Functions {
-
-    /*/ Basic wave functions: /*/
-    enum wave_func_t {
-        SINE,
-        SINE_POS,
-        SQUARE,
-        SAW,
-        TRIANGLE
-    };
+namespace Cynth::UserLibrary::Functions {
 
     class WaveFs {
     public:

@@ -42,8 +42,7 @@ SoundCard::SoundCard(): setup(), stop_loop(false) {
 }
 
 void SoundCard::waitForBuffer() {
-    std::this_thread::sleep_for(
-        std::chrono::milliseconds(this->buffer_period_ms / 2));
+    this->ptr_rendering_device->waitForBuffer();
 }
 
 void SoundCard::playLoop() {
@@ -57,8 +56,11 @@ void SoundCard::playLoop() {
     Cynth::UserLibrary::Functions::WaveFs wave_fs;
     
 	while (!this->stop_loop) {
-        // Wait in background:
-		std::thread wait(SoundCard::waitForBuffer, this);
+        // TODO: Wait asynchronously:
+        if (!first) {
+            std::thread wait(SoundCard::waitForBuffer, this);
+            wait.join();
+        }
 
         ptr_buffer = this->ptr_rendering_device->getBuffer();
         padded_buffer_size_frames
@@ -77,7 +79,7 @@ void SoundCard::playLoop() {
         buffer.moveTo(ptr_buffer);
 
         // Keep waiting:
-        wait.join();
+        //wait.join();
         // Then release the buffer:
 		this->ptr_rendering_device->releaseBuffer();
 
@@ -99,7 +101,6 @@ void SoundCard::play() {
     std::thread loop(SoundCard::playLoop, this);
 
     std::cout << "Press any key to stop. ";
-    int test;
     std::cin.get();
     std::cin.get();
 

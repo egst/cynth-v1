@@ -11,6 +11,8 @@
 namespace Cynth::API::WASAPI {
 
     class AudioClient: public Interface<IAudioClient> {
+    private:
+        HANDLE event_buffer;
     public:
         /* Constructor: */
         using Interface<IAudioClient>::Interface;
@@ -22,6 +24,8 @@ namespace Cynth::API::WASAPI {
         RenderClient render_client;
 
         /* WASAPI methods abstractions: */
+        void setEventHandle();
+        void waitForBuffer();
         void start();
         void stop();
     };

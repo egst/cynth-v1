@@ -94,6 +94,7 @@ namespace Cynth::API::WASAPI {
         /* WASAPI methods abstractions: */
         PropertyStore openPropertyStore(DWORD access = STGM_READ);
         std::string getId();
+        void waitForBuffer();
         byte_t* getBuffer();
         void releaseBuffer();
         void start();

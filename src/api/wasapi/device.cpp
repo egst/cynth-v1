@@ -34,6 +34,7 @@ void Device::setup() {
     this->checkFormatSupport();
     this->getDevicePeriod();
     this->initAudioClient();
+    this->audio_client.setEventHandle();
     this->getBufferSize();
     this->audio_client.render_client = this->getRenderClient();
 }
@@ -71,8 +72,8 @@ AudioClient Device::getAudioClient() {
 void Device::initAudioClient() {
     HRESULT hr = this->audio_client->Initialize(
         AUDCLNT_SHAREMODE_SHARED,
-        0, // TODO: Check out the flags. // Previously: AUDCLNT_STREAMFLAGS_EVENTCALLBACK
-        this->default_device_period, // Previously: minimum_device_period
+        AUDCLNT_STREAMFLAGS_EVENTCALLBACK,
+        this->default_device_period,
         0,
         this->ptr_wave_format,
         NULL); // TODO: How to generate session GUID?
@@ -218,6 +219,10 @@ int Device::getBitDepth() {
 
 int Device::getSampleRate() {
     return this->sample_rate;
+}
+
+void Device::waitForBuffer() {
+    this->audio_client.waitForBuffer();
 }
 
 byte_t* Device::getBuffer() {

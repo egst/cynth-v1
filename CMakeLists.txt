@@ -31,7 +31,7 @@ set(SOURCES
     ${PROJECT_SOURCE_DIR}/src/user_library/functions/sequence_function.cpp
     ${PROJECT_SOURCE_DIR}/src/user_library/functions/wave_function.cpp
     ${PROJECT_SOURCE_DIR}/src/user_library/functions/wave_functions.cpp
-    ${PROJECT_SOURCE_DIR}/src/entry.cpp
+    ${PROJECT_SOURCE_DIR}/src/entry2.cpp
     ${PROJECT_SOURCE_DIR}/src/logger.cpp
     ${PROJECT_SOURCE_DIR}/src/tools.cpp)
 

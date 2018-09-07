@@ -8,6 +8,7 @@
 
 /* Standard libraries: */
 #include <atomic>
+#include <thread>
 
 namespace Cynth::UserLibrary::Devices {
 
@@ -27,12 +28,15 @@ namespace Cynth::UserLibrary::Devices {
         std::atomic<bool> stop_loop;
         void playLoop();
         void waitForBuffer();
+
+        std::thread loop;
         
     public:
         /* Constructor: */
         SoundCard();
 
         void play();
+        void stop();
     };
 
 }

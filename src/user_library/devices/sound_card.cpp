@@ -98,14 +98,10 @@ void SoundCard::playLoop() {
 void SoundCard::play() {
     // Start the loop:
     this->stop_loop = false;
-    std::thread loop(SoundCard::playLoop, this);
+    this->loop = std::thread(&SoundCard::playLoop, this);
+}
 
-    std::cout << "Press any key to stop. ";
-    std::cin.get();
-    std::cin.get();
-
-    // Stop the loop:
+void SoundCard::stop() {
     this->stop_loop = true;
-    // Let the thread finish before going out of scope:
-    loop.join();
+    this->loop.join();
 }

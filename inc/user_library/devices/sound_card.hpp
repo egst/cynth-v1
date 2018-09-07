@@ -32,6 +32,9 @@ namespace Cynth::UserLibrary::Devices {
         /* Constructor: */
         SoundCard();
 
+        /* Debug: */
+        void printProperties(); // TODO: Only in LIB and CLI
+
         void play();
     };
 

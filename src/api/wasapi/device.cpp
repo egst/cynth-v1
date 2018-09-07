@@ -186,7 +186,7 @@ int Device::getBufferSizeIn(size_units_t units) {
     case size_units_t::FRAMES:
         return this->buffer_size_frames;
     case size_units_t::SAMPLES:
-        return this->buffer_size_frames / this->channel_count;
+        return this->buffer_size_frames * this->channel_count;
     default:
         return this->buffer_size_frames;
     }

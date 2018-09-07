@@ -41,6 +41,16 @@ SoundCard::SoundCard(): setup(), stop_loop(false) {
     this->sample_rate = this->ptr_rendering_device->getSampleRate();
 }
 
+void SoundCard::printProperties() {
+    std::cout << "buffer period: " << buffer_period_ms << " ms" << std::endl;
+    std::cout << "buffer size: " << buffer_size_frames << " frames" << std::endl;
+    std::cout << "buffer size: " << buffer_size_samples << " samples" << std::endl;
+    std::cout << "buffer size: " << buffer_size_bytes << " bytes" << std::endl;
+    std::cout << "channel count: " << channel_count << std::endl;
+    std::cout << "bit depth: " << bit_depth << " bits" << std::endl;
+    std::cout << "sample rate: " << sample_rate << " Hz" << std::endl;
+}
+
 void SoundCard::waitForBuffer() {
     this->ptr_rendering_device->waitForBuffer();
 }
@@ -67,8 +77,13 @@ void SoundCard::playLoop() {
             = this->ptr_rendering_device->getPaddedBufferSize();
 
         for (int i = 0; i < padded_buffer_size_frames; i++) {
+            /*float t
+                = (double) this->channel_count
+                * (i + periods_passed * padded_buffer_size_frames)
+                / this->sample_rate;*/
+            // TODO: Sample rate interpretation issues.
             float t
-                = (float) 2 * (i + periods_passed * padded_buffer_size_frames)
+                = (double) (i + periods_passed * padded_buffer_size_frames)
                 / this->sample_rate;
             sample = (float) this->input_port(t);
             for (int j = 0; j < this->channel_count; j++)

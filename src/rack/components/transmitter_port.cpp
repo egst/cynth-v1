@@ -10,6 +10,6 @@ TransmitterPort& TransmitterPort::operator<<(WaveFunction& f) {
     return *this;
 }
 
-float TransmitterPort::operator()(float offset) {
+float TransmitterPort::operator()(double offset) {
     return (*this->ptr_wave_function)(offset);
 }

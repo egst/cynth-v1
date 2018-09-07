@@ -2,11 +2,13 @@
 #include "user_library/devices/sequencer.hpp"
 
 using namespace Cynth::UserLibrary::Devices;
+using Cynth::UserLibrary::Functions::SequenceFunction;
 
-Cynth::UserLibrary::Devices::Sequencer::Sequencer(
-    // Params:
-    WaveFunction f,
-    float freq, // = 1
-    float amp, // = 0
-    freq_type_t freq_type) // = MF
-    : Oscillator(f, freq, amp, freq_type) {}
+Sequencer::Sequencer() {
+    this->freq_port << this->seq_function.freq_function;
+    this->amp_port << this->seq_function.amp_function;
+}
+
+Sequencer& Sequencer::operator<<(SequenceFunction f) {
+    this->seq_function = f;
+}

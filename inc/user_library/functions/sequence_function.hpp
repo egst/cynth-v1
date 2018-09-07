@@ -2,6 +2,11 @@
 
 /* Local libraries: */
 #include "user_library/functions/wave_function.hpp"
+#include "user_library/functions/sequence_element.hpp"
+#include "user_library/devices/sequencer.hpp"
+
+/* Standard libraries: */
+#include <vector>
 
 namespace Cynth::UserLibrary::Functions {
 
@@ -11,9 +16,17 @@ namespace Cynth::UserLibrary::Functions {
     /*/
     class SequenceFunction {
     private:
-        WaveFunction wave_function;
+        using Sequencer = Cynth::UserLibrary::Devices::Sequencer;
+        double period;
+        std::vector<SequenceElement> elements;
     public:
-        
+        SequenceFunction();
+
+        //friend class Sequencer;
+        WaveFunction freq_function;
+        WaveFunction amp_function;
+
+        SequenceFunction& operator<<(SequenceElement element);
     };
 
 }

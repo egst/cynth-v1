@@ -10,6 +10,6 @@ ReceiverPort& ReceiverPort::operator<<(TransmitterPort& port) {
     return *this;
 }
 
-float ReceiverPort::operator()(float offset) {
+float ReceiverPort::operator()(double offset) {
     return (*this->ptr_transmitter_port)(offset);
 }

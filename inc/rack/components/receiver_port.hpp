@@ -22,7 +22,7 @@ namespace Cynth::Rack::Components {
         ReceiverPort& operator<<(TransmitterPort& port);
 
         /* Accessors: */
-        float operator()(float offset);
+        float operator()(double offset);
     };
 
 }

@@ -28,6 +28,7 @@ set(SOURCES
     ${PROJECT_SOURCE_DIR}/src/user_library/devices/sequencer.cpp
     ${PROJECT_SOURCE_DIR}/src/user_library/devices/sound_card.cpp
     ${PROJECT_SOURCE_DIR}/src/user_library/devices/tone_generator.cpp
+    ${PROJECT_SOURCE_DIR}/src/user_library/functions/sequence_element.cpp
     ${PROJECT_SOURCE_DIR}/src/user_library/functions/sequence_function.cpp
     ${PROJECT_SOURCE_DIR}/src/user_library/functions/wave_function.cpp
     ${PROJECT_SOURCE_DIR}/src/user_library/functions/wave_functions.cpp

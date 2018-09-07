@@ -14,11 +14,13 @@ namespace Cynth::PCM::Functions {
     protected:
         /* Type definitions: */
         // Function definition:
-        using def_t = std::function<output_t(float)>;
+        using def_t = std::function<output_t(double)>;
 
         /* Properties: */
         // Function definition:
         def_t def;
+        // Starting offset:
+        double start;
     
     public:
         /* Constructor: */
@@ -27,9 +29,7 @@ namespace Cynth::PCM::Functions {
 
         /* Accessors: */
         // Call the function:
-        output_t operator() (float offset) const;
-        // For int input:
-        output_t operator() (int offset) const;
+        output_t operator() (double offset) const;
 
         /* Mutators: */
         // Set the function definition:

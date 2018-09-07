@@ -30,3 +30,4 @@
 #include "user_library/functions/wave_function.hpp"
 #include "user_library/functions/wave_functions.hpp"
 #include "user_library/functions/sequence_function.hpp"
+#include "user_library/functions/sequence_element.hpp"

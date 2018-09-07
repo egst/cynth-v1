@@ -32,12 +32,12 @@ int main() {
         SoundCard sound_card;
 
         // Tone generator generates audible sound:
-        ToneGenerator tone_generator(wave_func_t::SINE, 450, 0.1);
+        ToneGenerator tone_generator(wave_func_t::SAW, 450, 0.1);
 
         // Custom wave function definition:
         WaveFunction wobble;
         wobble = [wave_fs_library](float offset) -> float {
-            return 300 * (0.3 * wave_fs_library.sine(offset) + 0.5);
+            return (0.3 * wave_fs_library.sine(offset) + 0.5);
         };
 
         // LFO generates a wave function for modulating other devices:
@@ -45,7 +45,7 @@ int main() {
         // TODO: Frequency types.
 
         // LFO controls tone generator's amplitude:
-        //tone_generator.amp_port << lfo.output_port;
+        tone_generator.amp_port << lfo.output_port;
 
         // Tone generator outputs resulting modulated sound to sound card:
         sound_card.input_port << tone_generator.output_port;

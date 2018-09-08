@@ -5,6 +5,7 @@
 
 /* Standard libraries: */
 #include <vector>
+#include <limits>
 
 namespace Cynth::PCM {
 
@@ -20,8 +21,12 @@ namespace Cynth::PCM {
         unsigned char* data();
         std::size_t size();
         void clear();
-        void copyTo(unsigned char* ptr_buffer);
-        void moveTo(unsigned char* ptr_buffer);
+        void copyTo(
+            unsigned char* ptr_buffer,
+            std::size_t size = std::numeric_limits<std::size_t>::max());
+        void moveTo(
+            unsigned char* ptr_buffer,
+            std::size_t size = std::numeric_limits<std::size_t>::max());
     };
 
 }

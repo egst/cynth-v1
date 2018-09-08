@@ -33,7 +33,8 @@ int main() {
         sound_card.printProperties();
 
         // Tone generator generates audible sound:
-        ToneGenerator tone_generator(wave_func_t::SINE, 450, 0.1);
+        ToneGenerator lead(wave_func_t::SINE);
+        ToneGenerator bass(wave_func_t::SAW);
 
         // Custom wave function definition:
         WaveFunction wobble;
@@ -49,27 +50,52 @@ int main() {
         //tone_generator.amp_port << lfo.output_port;
 
         // Sequencer controls tone generator's frequency and amplitude:
-        Sequencer sequencer;
-        SequenceFunction seq_f;
-        seq_f << SequenceElement(0.25, 0.2, 130.81);
-        seq_f << SequenceElement(0.125);
-        seq_f << SequenceElement(0.125, 0.15, 164.81);
-        seq_f << SequenceElement(0.375, 0.2, 196);
-        seq_f << SequenceElement(0.125, 0.15, 246.94);
-        sequencer << seq_f;
-        tone_generator.freq_port << sequencer.freq_port;
-        tone_generator.amp_port << sequencer.amp_port;
+        Sequencer arpeggio;
+        SequenceFunction seq_arp_1;
+        seq_arp_1 << SequenceElement(0.25,  0.4, 261.63);   // C        1/4 ^
+        seq_arp_1 << SequenceElement(0.125);                // Silence  1/8
+        seq_arp_1 << SequenceElement(0.125, 0.2, 329.63);   // E        1/8
+        seq_arp_1 << SequenceElement(0.375, 0.4, 392);      // G        3/8 ^
+        seq_arp_1 << SequenceElement(0.125, 0.2, 493.88);   // B        1/8
+        seq_arp_1 *= 2;                                     // Repeat 2x
+        
+        SequenceFunction seq_arp_2;
+        seq_arp_2 << SequenceElement(0.25,  0.4, 233.08);   // A#       1/4 ^
+        seq_arp_2 << SequenceElement(0.125);                // Silence  1/8
+        seq_arp_2 << SequenceElement(0.125, 0.2, 329.63);   // E        1/8
+        seq_arp_2 << SequenceElement(0.375, 0.4, 349.23);   // F        3/8 ^
+        seq_arp_2 << SequenceElement(0.125, 0.2, 392);      // G        1/8
+        seq_arp_2 *= 2;                                     // Repeat 2x
+
+        // Merge:
+        seq_arp_1 << seq_arp_2;
+
+        arpeggio << seq_arp_1;
+        lead.freq_port << arpeggio.freq_port;
+        lead.amp_port << arpeggio.amp_port;
+
+        Sequencer base;
+        SequenceFunction seq_bas;
+        seq_bas << SequenceElement(2, 0.1, 65.406);         // C        2
+        seq_bas << SequenceElement(2, 0.1, 58.27);          // A#       2
+        base << seq_bas;
+        bass.freq_port << base.freq_port;
+        bass.amp_port << base.amp_port;
+
+        Hub hub_master(comp_type_t::ADD);
+        hub_master << lead.output_port;
+        hub_master << bass.output_port;
 
         // Tone generator outputs resulting modulated sound to sound card:
-        sound_card.input_port << tone_generator.output_port;
+        sound_card.input_port << hub_master.output_port;
 
         // Sound card plays its input through the output device:
         //sound_card.play();
-        float freq_input;
+        //float freq_input;
         while (true) {
-            std::cout << "Frequency: ";
+            /*std::cout << "Frequency: ";
             std::cin >> freq_input;
-            tone_generator.setFrequency(freq_input);
+            tone_generator.setFrequency(freq_input);*/
             sound_card.play();
         }
 

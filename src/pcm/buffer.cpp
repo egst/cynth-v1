@@ -34,11 +34,22 @@ void Buffer::clear() {
     this->bytes.clear();
 }
 
-void Buffer::copyTo(unsigned char* ptr_buffer) {
-    std::memcpy(ptr_buffer, this->data(), this->size());
+#include <iostream>
+
+void Buffer::copyTo(
+    unsigned char* ptr_buffer,
+    std::size_t size) { // = std::numeric_limits<std::size_t>::max()
+
+    if (size == std::numeric_limits<std::size_t>::max())
+        std::memcpy(ptr_buffer, this->data(), this->size());
+    else
+        std::memcpy(ptr_buffer, this->data(), size);
 }
 
-void Buffer::moveTo(unsigned char* ptr_buffer) {
-    this->copyTo(ptr_buffer);
+void Buffer::moveTo(
+    unsigned char* ptr_buffer,
+    std::size_t size) { // = std::numeric_limits<std::size_t>::max()
+
+    this->copyTo(ptr_buffer, size);
     this->clear();
 }

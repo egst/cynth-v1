@@ -56,46 +56,51 @@ void SoundCard::waitForBuffer() {
 }
 
 void SoundCard::playLoop() {
-    int periods_passed = 0;
+    int frames_passed = 0;
     bool first = true;
     Sample sample(this->bit_depth);
     Buffer buffer(this->bit_depth);
     byte_t* ptr_buffer;
     int padded_buffer_size_frames;
+    std::size_t padded_buffer_size_bytes;
 
     Cynth::UserLibrary::Functions::WaveFs wave_fs;
     
 	while (!this->stop_loop) {
-        // TODO: Wait asynchronously:
+        std::thread wait;
         if (!first) {
-            std::thread wait(SoundCard::waitForBuffer, this);
-            wait.join();
+            wait = std::thread(SoundCard::waitForBuffer, this);
+            //wait.join();
         }
-
-        ptr_buffer = this->ptr_rendering_device->getBuffer();
-        padded_buffer_size_frames
-            = this->ptr_rendering_device->getPaddedBufferSize();
-
-        for (int i = 0; i < padded_buffer_size_frames; i++) {
+        
+        // Load full buffer:
+        for (int i = 0; i < buffer_size_frames; i++) {
             /*float t
                 = (double) this->channel_count
                 * (i + periods_passed * padded_buffer_size_frames)
                 / this->sample_rate;*/
             // TODO: Sample rate interpretation issues.
-            float t
-                = (double) (i + periods_passed * padded_buffer_size_frames)
-                / this->sample_rate;
+            float t = (double) (i + frames_passed) / this->sample_rate;
             sample = (float) this->input_port(t);
             for (int j = 0; j < this->channel_count; j++)
                 buffer.write(sample);
         }
-        periods_passed++;
 
-        buffer.moveTo(ptr_buffer);
+        if (!first)
+            wait.join();
 
-        // Keep waiting:
-        //wait.join();
-        // Then release the buffer:
+        ptr_buffer = this->ptr_rendering_device->getBuffer();
+        // Get the actual buffer size with padding:
+        padded_buffer_size_frames
+            = this->ptr_rendering_device->getPaddedBufferSize();
+        padded_buffer_size_bytes
+            = this->ptr_rendering_device->getPaddedBufferSizeIn(
+                size_units_t::BYTES);
+        // Set offset for calculations in the next iteration:
+        frames_passed += padded_buffer_size_frames;
+        // Move to the padded buffer:
+        buffer.moveTo(ptr_buffer, padded_buffer_size_bytes);
+
 		this->ptr_rendering_device->releaseBuffer();
 
         if (first) {
@@ -115,8 +120,8 @@ void SoundCard::play() {
     this->stop_loop = false;
     std::thread loop(SoundCard::playLoop, this);
 
+    // Temporary:
     std::cout << "Press any key to stop. ";
-    std::cin.get();
     std::cin.get();
 
     // Stop the loop:

@@ -13,6 +13,30 @@ bool Cynth::Tools::compare(double a, double b) {
     return std::fabs(a - b) < std::numeric_limits<double>::epsilon();
 }
 
+bool Cynth::Tools::compare(float a, double b) {
+    return Cynth::Tools::compare((double) a, b);
+}
+
+bool Cynth::Tools::compare(double a, float b) {
+    return Cynth::Tools::compare(a, (double) b);
+}
+
+bool Cynth::Tools::compare(float a, int b) {
+    return Cynth::Tools::compare(a, (float) b);
+}
+
+bool Cynth::Tools::compare(int a, float b) {
+    return Cynth::Tools::compare((float) a, b);
+}
+
+bool Cynth::Tools::compare(double a, int b) {
+    return Cynth::Tools::compare(a, (double) b);
+}
+
+bool Cynth::Tools::compare(int a, double b) {
+    return Cynth::Tools::compare((double) a, b);
+}
+
 std::string Cynth::Tools::wcharToString(wchar_t* input) {;
     std::wstring wstr(input);
     std::string output(wstr.begin(), wstr.end());

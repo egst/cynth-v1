@@ -18,8 +18,13 @@ namespace Cynth {
 
         /* Comparing floats: */
         bool compare(float a, float b);
-        /* Comparing doubles: */
         bool compare(double a, double b);
+        bool compare(float a, double b);
+        bool compare(double a, float b);
+        bool compare(float a, int b);
+        bool compare(int a, float b);
+        bool compare(double a, int b);
+        bool compare(int a, double b);
 
         /* wchar conversion: */
         std::string wcharToString(wchar_t* input);

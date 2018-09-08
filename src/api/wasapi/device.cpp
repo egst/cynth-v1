@@ -195,11 +195,14 @@ int Device::getBufferSizeIn(size_units_t units) {
 int Device::getPaddedBufferSizeIn(size_units_t units) {
     switch(units) {
     case size_units_t::BYTES:
-        Logger::errCynth("TODO: Padded buffer size in bytes not implemented.");
+        return
+            this->padded_buffer_size_frames
+          * this->channel_count
+          * this->bit_depth / 8;
     case size_units_t::FRAMES:
         return this->padded_buffer_size_frames;
     case size_units_t::SAMPLES:
-        return this->padded_buffer_size_frames / this->channel_count;
+        return this->padded_buffer_size_frames * this->channel_count;
     default:
         return this->padded_buffer_size_frames;
     }

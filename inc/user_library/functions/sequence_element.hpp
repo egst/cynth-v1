@@ -1,9 +1,12 @@
 #pragma once
 
 /* Local libraries: */
-#include "user_library/functions/sequence_function.hpp"
+//#include "user_library/functions/sequence_function.hpp"
 
 namespace Cynth::UserLibrary::Functions {
+
+    // Forward declaration:
+    class SequenceFunction;
 
     class SequenceElement {
     private:

@@ -11,4 +11,5 @@ Sequencer::Sequencer() {
 
 Sequencer& Sequencer::operator<<(SequenceFunction f) {
     this->seq_function = f;
+    return *this;
 }

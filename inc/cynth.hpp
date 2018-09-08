@@ -18,14 +18,15 @@
 
 /* Audio APIs setup: */
 #ifdef CYNTH_API_WASAPI
-#include "api/wasapi/setup.hpp"
+//#include "api/wasapi/setup.hpp"
 #endif
 
 /* Synthesizer devices abstraction: */
+#include "user_library/devices/hub.hpp"
+#include "user_library/devices/lfo.hpp"
+#include "user_library/devices/sequencer.hpp"
 #include "user_library/devices/sound_card.hpp"
 #include "user_library/devices/tone_generator.hpp"
-#include "user_library/devices/sequencer.hpp"
-#include "user_library/devices/lfo.hpp"
 #include "user_library/functions/types.hpp"
 #include "user_library/functions/wave_function.hpp"
 #include "user_library/functions/wave_functions.hpp"

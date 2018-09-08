@@ -22,6 +22,7 @@
 #endif
 
 /* Synthesizer devices abstraction: */
+#include "user_library/devices/types.hpp"
 #include "user_library/devices/hub.hpp"
 #include "user_library/devices/lfo.hpp"
 #include "user_library/devices/sequencer.hpp"

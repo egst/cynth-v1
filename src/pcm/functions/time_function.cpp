@@ -15,6 +15,16 @@ output_t TimeFunction<output_t>::operator()(double offset) const {
 }
 
 template<typename output_t>
+double TimeFunction<output_t>::getStart() const {
+    return this->start;
+}
+
+template<typename output_t>
+void TimeFunction<output_t>::setStart(double offset) {
+    this->start = offset;
+}
+
+template<typename output_t>
 TimeFunction<output_t>& TimeFunction<output_t>::operator=(def_t def) {
     this->def = def;
     return *this;

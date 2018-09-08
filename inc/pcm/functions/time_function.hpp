@@ -29,7 +29,9 @@ namespace Cynth::PCM::Functions {
 
         /* Accessors: */
         // Call the function:
-        output_t operator() (double offset) const;
+        virtual output_t operator() (double offset) const;
+        double getStart() const;
+        void setStart(double offset);
 
         /* Mutators: */
         // Set the function definition:

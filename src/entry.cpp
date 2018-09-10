@@ -32,7 +32,7 @@ int main() {
 
         // A custom WaveFunction may be defined with a lambda function:
         WaveFunction sine_pos;
-        sine_pos = [wave_fs_library](float offset) -> double {
+        sine_pos = [wave_fs_library](double offset) -> float {
             return wave_fs_library.sine_pos(offset - (M_PI / 4));
         };
 

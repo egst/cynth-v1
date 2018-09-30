@@ -1,0 +1,87 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+table {
+    margin-left: 0 !important;
+}
+
+h2 {
+    /*color: #42b6f4;*/
+    font-weight: bold;
+}
+
+img[alt=img-large] {
+    width: 512px;
+}
+
+img[alt=img-medium] {
+    width: 256px;
+}
+
+img[alt=img-small] {
+    width: 128px;
+}
+
+emph-boxed {
+    display: inline-block;
+    padding: 0 8px;
+    /*border: 1px solid #fff;*/
+    border: 1px solid #fff;
+}
+
+block-def,
+block-the {
+    display: block;
+}
+
+elem-body,
+elem-let,
+elem-sym {
+    padding: 0 8px;
+}
+
+block-def elem-body,
+block-the elem-body {
+    display: inline-block;
+    padding: 0 8px;
+    /*border: 1px solid #fff;*/
+    border: 1px solid #fff;
+}
+
+elem-let {
+    display: block;
+    padding: 0 8px;
+    /*border-left: 4px solid #fff;*/
+    border-left: 4px solid #fff;
+}
+
+elem-sym {
+    display: block;
+    /*border-left: 4px double #fff;*/
+    border-left: 4px double #fff;
+}
+
+block-proof h3 {
+    cursor: pointer;
+}
+
+block-proof elem-body {
+    display: block;
+}
+
+block-proof:not(.important) elem-body {
+    /*display: none;*/
+}
+
+block-proof:hover elem-body {
+    /*display: block;*/
+}
+
+#show-proofs:checked ~ block-proof elem-body {
+    /*display: block;*/
+}
+
+#show-proofs:checked ~ block-proof h3 {
+    /*cursor: inherit;*/
+}

@@ -19,7 +19,7 @@ Cynth je programovatelný syntezátor zvuku, který pracuje s low-level zvukový
 
 ## Jak začít?
 
-Pro rychlý start beze zdlouhavých blábolů této dokumentace se stačí podívat do příkladů použití v souboru `src/entry.cpp` pro C++ knihovnu a v `build/test.py` pro Python modul. Popisuji tam veškerou funkcionalitu Cynthu. Pro podrobnější detaily k jednotlivým prvkům čtěte dále.
+Pro rychlý start beze zdlouhavých blábolů této dokumentace se stačí podívat do příkladů použití v souboru `test/dll_test.cpp` pro C++ knihovnu a v `test/py_test.py` pro Python modul. Popisuji tam veškerou funkcionalitu Cynthu. Pro podrobnější detaily k jednotlivým prvkům čtěte dále.
 
 ## Jak kompilovat?
 

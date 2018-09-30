@@ -1,6 +1,7 @@
 #pragma once
 
 /* Local libraries: */
+#include "platform.hpp"
 #include "rack/components/transmitter_port.hpp"
 
 /* Standard libraries: */
@@ -13,16 +14,16 @@ namespace Cynth::Rack::Components {
         /* Aliases: */
         using TransmitterPort = Rack::Components::TransmitterPort;
 
-        TransmitterPort* ptr_transmitter_port;
+        const TransmitterPort* ptr_transmitter_port;
     public:
         /* Constructor: */
         ReceiverPort();
 
         /* Mutators: */
-        ReceiverPort& operator<<(TransmitterPort& port);
+        CYNTH_EXPORT ReceiverPort& operator<<(const TransmitterPort& port);
 
         /* Accessors: */
-        float operator()(double offset);
+        float operator()(double offset) const;
     };
 
 }

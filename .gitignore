@@ -3,3 +3,5 @@ tmp/
 build/
 .vscode/
 bin/
+test/dll/cynth/*.dll
+test/dll/cynth/inc/*

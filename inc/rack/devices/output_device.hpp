@@ -15,7 +15,7 @@ namespace Cynth::Rack::Devices {
         OutputDevice();
 
         /* Connect input: */
-        OutputDevice& operator<<(TransmitterPort& port);
+        CYNTH_EXPORT OutputDevice& operator<<(TransmitterPort& port);
 
         ReceiverPort input_port;
     };

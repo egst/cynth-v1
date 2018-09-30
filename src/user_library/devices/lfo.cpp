@@ -1,6 +1,8 @@
 /* An implementation file for: */
 #include "user_library/devices/lfo.hpp"
 
+using namespace Cynth::UserLibrary::Devices;
+
 Cynth::UserLibrary::Devices::LFO::LFO(
     WaveFunction f,
     float freq, // = 1

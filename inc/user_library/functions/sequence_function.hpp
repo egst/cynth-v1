@@ -1,6 +1,7 @@
 #pragma once
 
 /* Local libraries: */
+#include "platform.hpp"
 #include "user_library/functions/wave_function.hpp"
 #include "user_library/functions/sequence_element.hpp"
 
@@ -13,7 +14,7 @@ namespace Cynth::UserLibrary::Functions {
     
         Generates frequency values.
     /*/
-    class SequenceFunction {
+    class CYNTH_EXPORT SequenceFunction {
     private:
         double period;
         std::vector<SequenceElement> elements;
@@ -21,6 +22,7 @@ namespace Cynth::UserLibrary::Functions {
         SequenceFunction();
 
         //friend class Sequencer;
+        // TODO: Should be priate?
         WaveFunction freq_function;
         WaveFunction amp_function;
 
@@ -31,6 +33,8 @@ namespace Cynth::UserLibrary::Functions {
         SequenceFunction& operator<<(SequenceFunction f);
         // Repeat the current function:
         SequenceFunction& operator*=(int n);
+        // TODO: Binary * operation to repeat functions.
+        // TODO: Binary + operation to concatenate functions?
     };
 
 }

@@ -1,13 +1,14 @@
 #pragma once
 
 /* Local libraries: */
+#include "platform.hpp"
 #include "rack/devices/input_device.hpp"
 #include "rack/devices/output_device.hpp"
 #include "user_library/functions/wave_function.hpp"
 
 namespace Cynth::UserLibrary::Devices {
 
-    class Envelope:
+    class CYNTH_EXPORT Envelope:
         public Cynth::Rack::Devices::InputDevice,
         public Cynth::Rack::Devices::OutputDevice {
         

@@ -13,13 +13,14 @@ using namespace std;
 
 int main(int argc, char* argv[]) {}
 
-#elif defined(CYNTH_ENV_LIB_TESTING)
+#elif defined(CYNTH_LIB_TESTING)
 
+using namespace Cynth::UserLibrary;
 using namespace Cynth::UserLibrary::Devices;
 using namespace Cynth::UserLibrary::Functions;
-using Cynth::UserLibrary::Functions::wave_func_t;
-using Cynth::UserLibrary::Functions::freq_type_t;
-using Cynth::UserLibrary::Devices::comp_type_t;
+using wave_func_t = Types::wave_func_t;
+using freq_type_t = Types::freq_type_t;
+using comp_type_t = Types::comp_type_t;
 
 int main() {
     try {

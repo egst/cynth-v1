@@ -2,13 +2,14 @@
 #include "logger.hpp"
 
 /* Standard libraries: */
-#if defined(CYNTH_ENV_CLI) \
- || defined(CYNTH_ENV_LIB) \
- || defined(CYNTH_ENV_LIB_TESTING)
+#if defined(CYNTH_ENV_CLI) || defined(CYNTH_ENV_LIB) || defined(CYNTH_ENV_LIB_TESTING)
 #include <iostream>
 #endif
+
 #include <sstream>
 #include <exception>
+
+using namespace Cynth;
 
 /* -- Logger: --------------------------------------------------------------- */
 

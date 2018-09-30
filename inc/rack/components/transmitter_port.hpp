@@ -13,16 +13,16 @@ namespace Cynth::Rack::Components {
         /* Aliases: */
         using WaveFunction = Cynth::UserLibrary::Functions::WaveFunction;
 
-        WaveFunction* ptr_wave_function;
+        const WaveFunction* ptr_wave_function;
     public:
         /* Constructor: */
         TransmitterPort();
 
         /* Mutators: */
-        TransmitterPort& operator<<(WaveFunction& f);
+        TransmitterPort& operator<<(const WaveFunction& f);
 
         /* Accessors: */
-        float operator()(double offset);
+        float operator()(double offset) const;
     };
 
 }

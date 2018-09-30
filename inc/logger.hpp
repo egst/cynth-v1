@@ -26,9 +26,9 @@ namespace Cynth {
         static void errCynth(std::string message);
 
         /* Platform independent log: */
-        static void log(std::string message);
-        static void log(int message);
-        static void log(float message);
+        static CYNTH_EXPORT void log(std::string message);
+        static CYNTH_EXPORT void log(int message);
+        static CYNTH_EXPORT void log(float message);
     };
 
     /*/ Custom exception: /*/
@@ -49,14 +49,14 @@ namespace Cynth {
     };
 
     /*/ Platform exception: /*/
-    class PlatformException: public Exception {
+    class CYNTH_EXPORT PlatformException: public Exception {
     public:
         PlatformException(std::string message = "Platform not suppored.");
     };
 
     #ifdef CYNTH_OS_WINDOWS
     /*/ COM exception: /*/
-    class COMException: public Exception {
+    class CYNTH_EXPORT COMException: public Exception {
     public:
         COMException(HRESULT message);
     };
@@ -64,14 +64,14 @@ namespace Cynth {
 
     #ifdef CYNTH_API_WASAPI
     /*/ WASAPI exception: /*/
-    class WASAPIException: public Exception {
+    class CYNTH_EXPORT WASAPIException: public Exception {
     public:
         WASAPIException(std::string message);
     };
     #endif
 
     /*/ Cynth exception: /*/
-    class CynthException: public Exception {
+    class CYNTH_EXPORT CynthException: public Exception {
     public:
         CynthException(std::string message);
     };

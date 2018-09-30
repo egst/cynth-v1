@@ -7,7 +7,7 @@
 #include "rack/devices/output_device.hpp"
 #include "pcm/functions/conversion_function.hpp"
 #include "pcm/functions/conversion_functions.hpp"
-#include "user_library/functions/types.hpp"
+#include "user_library/types.hpp"
 #include "user_library/functions/wave_function.hpp"
 #include "user_library/functions/wave_functions.hpp"
 #include "user_library/functions/sequence_function.hpp"
@@ -20,8 +20,8 @@ namespace Cynth::Rack::Devices {
         /* Aliases: */
         using ReceiverPort = Cynth::Rack::Components::ReceiverPort;
         using TransmitterPort = Cynth::Rack::Components::TransmitterPort;
-        using freq_type_t = Cynth::UserLibrary::Functions::freq_type_t;
-        using wave_func_t = Cynth::UserLibrary::Functions::wave_func_t;
+        using freq_type_t = Cynth::UserLibrary::Types::freq_type_t;
+        using wave_func_t = Cynth::UserLibrary::Types::wave_func_t;
         using WaveFunction = Cynth::UserLibrary::Functions::WaveFunction;
         using SequenceFunction
             = Cynth::UserLibrary::Functions::SequenceFunction;

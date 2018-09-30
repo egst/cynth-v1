@@ -27,7 +27,7 @@ Hub::Hub(comp_type_t comp) { // = comp_type_t::ADD
     this->output_port << this->comp_function;
 }
 
-Hub& Hub::operator<<(TransmitterPort& port) {
+Hub& Hub::operator<<(const TransmitterPort& port) {
     this->input_ports.emplace_back();
     this->input_ports.back() << port;
     return *this;

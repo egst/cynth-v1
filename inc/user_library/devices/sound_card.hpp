@@ -2,16 +2,18 @@
 
 /* Local libraries: */
 #include "platform.hpp"
+#include "platform.hpp"
 #include "api/setup.hpp"
 #include "api/device.hpp"
 #include "rack/devices/output_device.hpp"
 
 /* Standard libraries: */
+#include <thread>
 #include <atomic>
 
 namespace Cynth::UserLibrary::Devices {
 
-    class SoundCard: public Cynth::Rack::Devices::OutputDevice {
+    class CYNTH_EXPORT SoundCard: public Cynth::Rack::Devices::OutputDevice {
     private:
         CYNTH_API_NS::Setup setup;
         CYNTH_API_NS::Device* ptr_rendering_device;
@@ -25,6 +27,7 @@ namespace Cynth::UserLibrary::Devices {
         int sample_rate;
 
         std::atomic<bool> stop_loop;
+        std::thread loop_thread;
         void playLoop();
         void waitForBuffer();
         
@@ -36,6 +39,7 @@ namespace Cynth::UserLibrary::Devices {
         void printProperties(); // TODO: Only in LIB and CLI
 
         void play();
+        void stop();
     };
 
 }

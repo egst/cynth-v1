@@ -1,6 +1,7 @@
 #pragma once
 
 /* Local libraries: */
+#include "platform.hpp"
 #include "rack/devices/oscillator.hpp"
 #include "user_library/functions/wave_function.hpp"
 
@@ -10,7 +11,7 @@ namespace Cynth::UserLibrary::Devices {
 
         Used to generade audible waves.
     /*/
-    class ToneGenerator: public Cynth::Rack::Devices::Oscillator {
+    class CYNTH_EXPORT ToneGenerator: public Cynth::Rack::Devices::Oscillator {
     public:
         /* Constructors: */
         // With custom wave function:

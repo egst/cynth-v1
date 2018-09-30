@@ -1,6 +1,7 @@
 #pragma once
 
 /* Local libraries: */
+#include "platform.hpp"
 #include "user_library/functions/wave_function.hpp"
 
 /* Standard libraries: */
@@ -9,13 +10,14 @@
 
 namespace Cynth::UserLibrary::Functions {
 
-    class WaveFs {
+    class CYNTH_EXPORT WaveFs {
     public:
         /* Constructor: */
         // Initializes the functions.
         WaveFs();
 
         /* Static Functions: */
+        // TODO: Make private and allow only read access.
         // Sine Wave:
         WaveFunction sine;
         // Sine Wave Positive:

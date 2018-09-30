@@ -30,6 +30,11 @@ TimeFunction<output_t>& TimeFunction<output_t>::operator=(def_t def) {
     return *this;
 }
 
+template<typename output_t>
+TimeFunction<output_t>& TimeFunction<output_t>::operator<<(def_t def) {
+    return this->operator=(def);
+}
+
 /* Types: */
 template class TimeFunction<float>;
 template class TimeFunction<int>;

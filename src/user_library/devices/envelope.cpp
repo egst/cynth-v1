@@ -23,7 +23,7 @@ Envelope::Envelope() {
     };
 
     this->mod_function = [this](double offset) -> float {
-        this->env_function(offset) * this->input_port(offset);
+        return this->env_function(offset) * this->input_port(offset);
     };
 
     this->output_port << this->mod_function;

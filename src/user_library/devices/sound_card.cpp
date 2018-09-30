@@ -9,7 +9,6 @@
 #include "user_library/functions/wave_functions.hpp" // Temporary
 
 /* Standard libraries: */
-#include <thread>
 #include <chrono>
 #include <cmath>    // Temporary
 #include <iostream> // Temporary
@@ -118,14 +117,24 @@ void SoundCard::playLoop() {
 void SoundCard::play() {
     // Start the loop:
     this->stop_loop = false;
-    std::thread loop(SoundCard::playLoop, this);
+    //std::thread loop(SoundCard::playLoop, this);
+    this->loop_thread = std::thread(SoundCard::playLoop, this);
+    this->loop_thread.detach();
 
-    // Temporary:
+    /*// Temporary:
     std::cout << "Press any key to stop. ";
     std::cin.get();
 
     // Stop the loop:
     this->stop_loop = true;
     // Let the thread finish before going out of scope:
-    loop.join();
+    loop.join();*/
 }
+
+void SoundCard::stop() {
+    // Stop the loop:
+    this->stop_loop = true;
+    // Let the thread finish before going out of scope:
+    //this->loop_thread.join();
+}
+

@@ -1,5 +1,8 @@
 #pragma once
 
+/* Local libraries: */
+#include "platform.hpp"
+
 /* Standard libraries: */
 #include <functional>
 
@@ -29,13 +32,16 @@ namespace Cynth::PCM::Functions {
 
         /* Accessors: */
         // Call the function:
-        virtual output_t operator() (double offset) const;
+        virtual CYNTH_EXPORT output_t operator() (double offset) const;
         double getStart() const;
         void setStart(double offset);
 
         /* Mutators: */
         // Set the function definition:
-        TimeFunction<output_t>& operator=(def_t def);
+        CYNTH_EXPORT TimeFunction<output_t>& operator=(def_t def);
+        // Alternative operator to set the function definition:
+        // (For Python, where the assignment operator is not overloadable.)
+        CYNTH_EXPORT TimeFunction<output_t>& operator<<(def_t def);
     };
 
 }

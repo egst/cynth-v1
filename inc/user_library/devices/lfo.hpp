@@ -1,6 +1,7 @@
 #pragma once
 
 /* Local libraries: */
+#include "platform.hpp"
 #include "rack/devices/oscillator.hpp"
 #include "user_library/functions/wave_function.hpp"
 
@@ -11,7 +12,7 @@ namespace Cynth::UserLibrary::Devices {
 
         Used to generade slower waves to modulate properties of other devices.
     /*/
-    class LFO: public Cynth::Rack::Devices::Oscillator {
+    class CYNTH_EXPORT LFO: public Cynth::Rack::Devices::Oscillator {
     public:
         /* Constructors: */
         // With custom wave function:

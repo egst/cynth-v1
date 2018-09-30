@@ -1,10 +1,5 @@
 #pragma once
 
-// Temporary for testing:
-#ifndef CYNTH_LIB_PY
-#define CYNTH_LIB_PY
-#endif
-
 // Operating system:
 #if !( defined(CYNTH_OS_WINDOWS) || defined(CYNTH_OS_LINUX) )
     #define CYNTH_OS_WINDOWS // (by default)
@@ -21,7 +16,7 @@
 
 // Library modes:
 #ifdef CYNTH_ENV_LIB
-    #if !( defined(CYNTH_LIB_BUILD) || defined(CYNTH_LIB_USE) || defined(CYNTH_LIB_PY) )
+    #if !( defined(CYNTH_LIB_BUILD) || defined(CYNTH_LIB_USE) || defined(CYNTH_LIB_PY) || defined(CYNTH_LIB_STATIC) )
         #define CYNTH_LIB_USE // To import interfaces (by default)
         // Other options:
         // CYNTH_LIB_BUILD - To export interfaces

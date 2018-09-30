@@ -42,7 +42,7 @@ namespace Cynth::Rack::Devices {
         // Basic wave functions library:
         WaveFs wave_fs;
 
-        /* Default transmitter ports for contant frequency and amplitude: */
+        /* Default transmitter ports for constant frequency and amplitude: */
         TransmitterPort freq_transmitter;
         TransmitterPort amp_transmitter;
 

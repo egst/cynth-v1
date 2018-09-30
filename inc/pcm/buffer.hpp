@@ -18,6 +18,8 @@ namespace Cynth::PCM {
         Buffer(int bit_depth);
 
         void write(Sample sample);
+        // TODO:
+        Buffer& operator<<(Sample sample);
         unsigned char* data();
         std::size_t size();
         void clear();

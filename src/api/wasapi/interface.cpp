@@ -7,17 +7,21 @@
 using namespace Cynth::API::WASAPI;
 using Cynth::Logger;
 
+/* -- Construction: --------------------------------------------------------- */
+
 template<typename interface_t>
 Interface<interface_t>::Interface()
-    : ptr_instance(nullptr), auto_release(true) {}
+    : ptr_instance{nullptr}, auto_release{true} {}
 
 template<typename interface_t>
 Interface<interface_t>::Interface(interface_t* ptr_instance)
-    : ptr_instance(ptr_instance), auto_release(true) {}
+    : ptr_instance{ptr_instance}, auto_release{true} {}
+
+/* -- Destruction: ---------------------------------------------------------- */
 
 template<typename interface_t>
 Interface<interface_t>::~Interface() {
-    if (this->auto_release && this->ptr_instance) {
+    if (this->ptr_instance && this->auto_release) {
         this->ptr_instance->Release();
         this->ptr_instance = nullptr;
     }
@@ -33,29 +37,42 @@ void Interface<interface_t>::noAutoRelease() {
     this->auto_release = false;
 }
 
+/* -- Access: --------------------------------------------------------------- */
+
 template<typename interface_t>
 interface_t* Interface<interface_t>::operator->() {
     return this->ptr_instance;
 }
 
+/* -- Move & Copy: ---------------------------------------------------------- */
+
+// Copy constructor:
 template<typename interface_t>
 Interface<interface_t>::Interface(const Interface<interface_t>& other) {
     Logger::errCynth("An interface may not be copied.");
 }
 
+// Copy assignment:
 template<typename interface_t>
-Interface<interface_t>&
-Interface<interface_t>::operator=(const Interface<interface_t>& other) {
+Interface<interface_t>& Interface<interface_t>::operator=(
+    const Interface<interface_t>& other) {
+    
     Logger::errCynth("An interface may not be copied.");
     return *this;
 }
 
+// Move constructor:
 template<typename interface_t>
-Interface<interface_t>::Interface(Interface<interface_t>&& other) = default;
+Interface<interface_t>::Interface(Interface<interface_t>&& other)
+    = default;
 
+// Move assignment:
 template<typename interface_t>
 Interface<interface_t>& Interface<interface_t>::operator=(
-    Interface<interface_t>&& other) = default;
+    Interface<interface_t>&& other)
+    = default;
+
+/* -- Template instances: --------------------------------------------------- */
 
 /* Windows libraries: */
 // Audio Client:
@@ -63,7 +80,6 @@ Interface<interface_t>& Interface<interface_t>::operator=(
 // Multimedia Device API:
 #include <mmdeviceapi.h>
 
-/* Types: */
 template class Interface<IAudioClient>;
 template class Interface<IMMDeviceCollection>;
 template class Interface<IMMDeviceEnumerator>;

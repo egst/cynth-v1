@@ -1,82 +1,116 @@
 #pragma once
 
 namespace Cynth::API::WASAPI {
+    /*/ Generic interface:
+    
+    Provides a COM interface encapsulation.
 
-    /*/ Generic Interface:
-    WASAPI interfaces abstractions.
-    
-    These provide abstractions for COM interfaces with key features:
-        * Safe to work with without managing the memory allocation manually.
-        * More modern C++ approach: Avoiding out parameters etc.
-        * HRESULT check is done by these abstractions.
-    
-    COM interfaces get released and all pointer allocated memory is freed
-    when an Interface object is destructed.
-    This may be suppressed with auto_release property set to false.
-    Suppressing the release is used when the object is created
-    on the stack, then returned by value.
-    When obtaining such objects, use interface_object.autoRelease(),
-    or call interface_object->Release() manually when needed.
-    
-    The COM interface instance is accessible via ptr_instance pointer.
-    The -> operator of the Interface class is overloaded to provide
-    this instance too:
-    Instead of interface_object.ptr_instance->CoMethod()
-    use interface_object->CoMethod().
-    
-    Some COM methods are wrapped in a custom abstraction method.
-    These have the same names as the COM methods,
-    but they follow local naming convention - camelCase:
-    If there is an abstraction for interface_object->CoMethod() provided,
-    use interface_object.coMethod().
-    
-    Some COM interface abstractions contain initialization
-    with CoCreateInstance() inside their constructor.
-    Some are constructed via passing the interface pointer
-    (received from other abstractions) to their constructor.
-    
-    HRESULT is checked by these abstractions.
-    When it fails, the situation is then handled by Cynth::Logger. /*/
+    `Interface` takes a COM interface type as a template parameter.
+    It then serves as a wrapper for a pointer to an instance of this interface.
+
+    When creating a new derived `Interface`, add the correstponding type
+    to the "Template instances" section of `interface.cpp`.
+    /*/
     template<typename interface_t>
     class Interface {
-    protected:
-        /* Properties: */
-        // WASAPI interface instance:
-        interface_t* ptr_instance;
-        // When false, the interface instance
-        // is not released on destruction.
-        bool auto_release;
-
     public:
-        /* Constructor:
+        /*/ Automatic release:
+
+        The underlying interface instance is released upon destruction
+        by calling its `->Release()` method.
+
+        The destructor is declared virtual so that it may be modified
+        for a derived `Interface` to handle cleanup of a more specific interface.
         
-        Sets the ptr_instance property to the given interface pointer. */
-        Interface();
-        Interface(interface_t* ptr_instance);
+        To allow or suppress the automatic release upon destruction,
+        the `::autoRelease()` and `::noAutoRelease()` methods are used.
+        These serve only as mutators for the `::auto_release` property
+        which is then checked by the destructor
+        so there is no need to override them.
 
-        /* Move & Copy: */
-        // Copy constructor:
-        Interface(const Interface<interface_t>& other);
-        // Copy assignment:
-        Interface<interface_t>& operator=(const Interface<interface_t>& other);
-        // Move constructor:
-        Interface(Interface<interface_t>&& other);
-        // Move assignment:
-        Interface<interface_t>& operator=(Interface<interface_t>&& other);
-
-        /* Destructor:
-
-        Releases the WASAPI interface instance. */
+        `auto_release` is set to `true` upon construction by default
+        and to `false` when the `Interface` is returned by another method.
+        Don't forget to use the `::autoRelease()` method after receiving
+        such an `Interface` if automatic release is needed.
+        /*/
         virtual ~Interface();
+        void autoRelease();   // Allow auto release. (default)
+        void noAutoRelease(); // Suppress auto release.
 
-        // Allow auto release: (default)
-        void autoRelease();
-        // Suppress auto release:
-        void noAutoRelease();
+        /*/ Move & copy:
 
-        /* Accessors: */
-        // Allows WASAPI instance method to be used directly:
+        Copy constructors throw an exception.
+        This way `Interface` can never be copied, only moved.
+        Derived `Interfce`s may override the copy constructors to notify
+        the end user of which `Interface` was to be moved.
+        TODO: Is it possible to handle this in the base class?
+
+        Move constructors are defined as default - member-wise move.
+        /*/
+        virtual Interface(
+            const Interface<interface_t>& other);          // Copy constructor
+
+        virtual Interface<interface_t>& operator=(
+            const Interface<interface_t>& other);          // Copy assignment
+
+        virtual Interface(Interface<interface_t>&& other); // Move constructor
+
+        virtual Interface<interface_t>& operator=(
+            Interface<interface_t>&& other);               // Move assignment
+    
+    protected:
+        /*/ Underlying interface access:
+
+        Methods of the underlying interface may be accessed directly
+        by the overloaded `::operator->()`.
+        However, wrappers for needed methods should be provided
+        by a derived `Interface` to avoid such direct use for the end user.
+        When a derived `Interface` is under construction in a testing state
+        it may declare this accessor as public explcitly.
+        These wrappers' implementation should match those criteria:
+        * Avoiding in and out parameters.
+        * Sparing the caller from use of pointers.
+        * Handling HRESULTS and throwing exceptions when impossible to handle.
+        * In case of returning another `Interface`:
+            Return by value and handle auto release.
+        * Naming:
+            * According to the local naming convention - camelCase.
+            Appart from the casing:
+            * If it only wraps a COM method, it should be named the same.
+                (Exceptions may occur if it matches the local structure.)
+            * If it provides a more specific or more complex functionality,
+                it should use the keywords from the underlying COM methods.
+        /*/
         interface_t* operator->();
-    };
 
+        /*/ Construction:
+
+        The pointer to the underlying interface instance is set
+        upon construction and nothing else is done by the base constructor.
+
+        Some derived `Interface`s are meant be constructed explicitly
+        by the end user. These should provide a public constructor explicitly.
+        Others are only meant to be constructed and returned by a method
+        of another `Interface`. In these cases, the constructor should
+        remain private and the `Interface`s authorized to create them
+        should be declared as friends.
+        // TODO: Can this cause problems when the basic ctor is called implicitly?
+        The default costructor should not be accessible to the end user.
+
+        See the "Automatic release" section for details
+        on the `auto_release` value in different scenarios of construction.
+
+        Constructors should match the criteria listed in the section above
+        except for the use of pointers when private.
+        /*/
+        Interface(interface_t* ptr_instance);
+        Interface();
+
+        // Pointer to the underlying interface instance:
+        interface_t* ptr_instance;
+        // TODO: Switch to safe pointers?
+        
+        // Automatic release state:
+        bool auto_release;
+    };
 }

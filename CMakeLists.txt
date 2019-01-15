@@ -32,9 +32,9 @@ include(${PROJECT_SOURCE_DIR}/cynth.cmake)
 include(${PROJECT_SOURCE_DIR}/thirdparty.cmake)
 
 ## Warnings: ##
-#add_compile_options(-Wall)
-#add_compile_options(-Wno-c++98-c++11-c++14-compat)
-add_compile_options(-w)
+add_compile_options(-Wall)
+add_compile_options(-Wno-c++98-c++11-c++14-compat)
+#add_compile_options(-w)
 
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 	add_compile_options(-fsized-deallocation)

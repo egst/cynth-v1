@@ -6,6 +6,7 @@
 
 /* Standard libraries: */
 #define _USE_MATH_DEFINES // -> M_PI
+#include <math.h>
 #include <cmath>
 
 using namespace Cynth::UserLibrary::Functions;

@@ -23,6 +23,6 @@ ConversionFunction<input_t, output_t>::operator=(def_t def) {
 }
 
 /* Types: */
-template class ConversionFunction<float, float>;
-template class ConversionFunction<float, int>;
-template class ConversionFunction<int, float>;
+template class Cynth::PCM::Functions::ConversionFunction<float, float>;
+template class Cynth::PCM::Functions::ConversionFunction<float, int>;
+template class Cynth::PCM::Functions::ConversionFunction<int, float>;

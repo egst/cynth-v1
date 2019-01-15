@@ -1,5 +1,7 @@
 #pragma once
 
+#define NOMINMAX //
+
 /* Platform setup: */
 #include "platform.hpp"
 

@@ -36,5 +36,5 @@ TimeFunction<output_t>& TimeFunction<output_t>::operator<<(def_t def) {
 }
 
 /* Types: */
-template class TimeFunction<float>;
-template class TimeFunction<int>;
+template class Cynth::PCM::Functions::TimeFunction<float>;
+template class Cynth::PCM::Functions::TimeFunction<int>;

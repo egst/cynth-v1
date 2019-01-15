@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.12)
 
 ## Choose one of these OS options: ##
 set(CYNTH_OS "WIN")
@@ -11,8 +11,8 @@ set(CYNTH_API "WASAPI") # Only for Windows
 
 ## Choose one of these environment options: ##
 #set(CYNTH_ENV "SHARED") # Shared library (Outputs DLL for Windows and SO for Linux)
-set(CYNTH_ENV "PY")     # Python module (Outputs PYD for Windows)
-#set(CYNTH_ENV "CLI")    # Command line interface; To be implemented
+#set(CYNTH_ENV "PY")     # Python module (Outputs PYD for Windows)
+set(CYNTH_ENV "CLI")    # Command line interface; To be implemented
 # For static library: Just define the CYNTH_LIB_STATIC macro in your code. (TODO!)
 
 #[[ Note:
@@ -28,21 +28,28 @@ project(Cynth CXX)
 ## C++ Standard: ##
 set(CMAKE_CXX_STANDARD 17)
 
+include(${PROJECT_SOURCE_DIR}/cynth.cmake)
+include(${PROJECT_SOURCE_DIR}/thirdparty.cmake)
+
 ## Warnings: ##
-set(CMAKE_CXX_FLAGS "-Wall")
+#add_compile_options(-Wall)
+#add_compile_options(-Wno-c++98-c++11-c++14-compat)
+add_compile_options(-w)
+
+if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+	add_compile_options(-fsized-deallocation)
+endif()
 
 ## Output directory: ##
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CYNTH_DIR_SYSTEM})
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CYNTH_DIR_SYSTEM})
 
 ## For Python module: ##
 if(CYNTH_ENV STREQUAL "PY")
-    include_directories(${PROJECT_SOURCE_DIR}/ext/pybind11/include) # Headers for pybind11
-    # Change to your location of Python headers:
-    include_directories(C:/Programs/Python/Python37/include) # Headers for Python
-    # Change to your location of Python executable: (Optional, but may resolve version mismatch problems.)
-    #set(PYTHON_EXECUTABLE C:/Programs/Python/Python37/python.exe) # Python executable
-    set(PYBIND11_CPP_STANDARD -std=c++1z) # Experimental support of C++17
+	add_subdirectory(${3RDPARTY_PYBIND11})
+    include_directories(${PYBIND11_INCLUDE_DIR}) # Headers for pybind11
+    include_directories(${Python3_INCLUDE_DIRS}) # Headers for Python
+    #set(PYBIND11_CPP_STANDARD -std=c++1z) # Experimental support of C++17
 endif()
 
 ## Cynth headers: ##
@@ -111,7 +118,7 @@ if(CYNTH_ENV STREQUAL "SHARED")
 elseif(CYNTH_ENV STREQUAL "PY")
     add_definitions(-DCYNTH_ENV_LIB -DCYNTH_LIB_PY)
 elseif(CYNTH_ENV STREQUAL "CLI")
-    add_compile_definitions(-DCYNTH_ENV_CLI)
+    add_compile_definitions(CYNTH_ENV_CLI)
 endif()
 ## Audio API: ##
 if(CYNTH_API STREQUAL "WASAPI")
@@ -128,7 +135,6 @@ if(CYNTH_ENV STREQUAL "SHARED")
     add_library(Cynth SHARED ${SOURCES}) # TODO: Rename? (Remove lib prefix)
 # Python module:
 elseif(CYNTH_ENV STREQUAL "PY")
-    add_subdirectory(ext/pybind11)
     pybind11_add_module(Cynth ${SOURCES} NO_EXTRAS)
     #set_target_properties(Cynth PROPERTIES OUTPUT_NAME Cynth) # TODO: Rename
 # CLI:

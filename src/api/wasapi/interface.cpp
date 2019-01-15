@@ -80,9 +80,9 @@ Interface<interface_t>& Interface<interface_t>::operator=(
 // Multimedia Device API:
 #include <mmdeviceapi.h>
 
-template class Interface<IAudioClient>;
-template class Interface<IMMDeviceCollection>;
-template class Interface<IMMDeviceEnumerator>;
-template class Interface<IMMDevice>;
-template class Interface<IPropertyStore>;
-template class Interface<IAudioRenderClient>;
+template class Cynth::API::WASAPI::Interface<IAudioClient>;
+template class Cynth::API::WASAPI::Interface<IMMDeviceCollection>;
+template class Cynth::API::WASAPI::Interface<IMMDeviceEnumerator>;
+template class Cynth::API::WASAPI::Interface<IMMDevice>;
+template class Cynth::API::WASAPI::Interface<IPropertyStore>;
+template class Cynth::API::WASAPI::Interface<IAudioRenderClient>;

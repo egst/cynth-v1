@@ -25,10 +25,10 @@ namespace Cynth::PCM {
         void clear();
         void copyTo(
             unsigned char* ptr_buffer,
-            std::size_t size = std::numeric_limits<std::size_t>::max());
+            std::size_t size = (std::numeric_limits<std::size_t>::max)());
         void moveTo(
             unsigned char* ptr_buffer,
-            std::size_t size = std::numeric_limits<std::size_t>::max());
+            std::size_t size = (std::numeric_limits<std::size_t>::max)());
     };
 
 }

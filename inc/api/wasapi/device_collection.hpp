@@ -7,7 +7,7 @@
 namespace Cynth::API::WASAPI {
 
     class DeviceCollection: public Interface<IMMDeviceCollection> {
-    public:
+      public:
         /* Constructor: */
         using Interface<IMMDeviceCollection>::Interface;
 

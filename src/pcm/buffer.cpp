@@ -40,7 +40,7 @@ void Buffer::copyTo(
     unsigned char* ptr_buffer,
     std::size_t size) { // = std::numeric_limits<std::size_t>::max()
 
-    if (size == std::numeric_limits<std::size_t>::max())
+    if (size == (std::numeric_limits<std::size_t>::max)())
         std::memcpy(ptr_buffer, this->data(), this->size());
     else
         std::memcpy(ptr_buffer, this->data(), size);

@@ -1,7 +1,11 @@
-test2.cpp
-tmp/
-build/
+
 .vscode/
 bin/
-test/dll/cynth/*.dll
-test/dll/cynth/inc/*
+build/
+tmp/
+
+# ?
+test2.cpp
+
+#test/dll/cynth/*.dll
+#test/dll/cynth/inc/*

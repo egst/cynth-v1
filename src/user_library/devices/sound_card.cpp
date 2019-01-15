@@ -68,7 +68,7 @@ void SoundCard::playLoop() {
 	while (!this->stop_loop) {
         std::thread wait;
         if (!first) {
-            wait = std::thread(SoundCard::waitForBuffer, this);
+            wait = std::thread(&SoundCard::waitForBuffer, this);
             //wait.join();
         }
         
@@ -118,7 +118,7 @@ void SoundCard::play() {
     // Start the loop:
     this->stop_loop = false;
     //std::thread loop(SoundCard::playLoop, this);
-    this->loop_thread = std::thread(SoundCard::playLoop, this);
+    this->loop_thread = std::thread(&SoundCard::playLoop, this);
     this->loop_thread.detach();
 
     /*// Temporary:

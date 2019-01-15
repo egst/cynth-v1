@@ -13,7 +13,7 @@ namespace Cynth::API::WASAPI {
     /*/
     template<typename interface_t>
     class Interface {
-    public:
+      public:
         /*/ Automatic release:
 
         The underlying interface instance is released upon destruction
@@ -47,18 +47,18 @@ namespace Cynth::API::WASAPI {
 
         Move constructors are defined as default - member-wise move.
         /*/
-        virtual Interface(
+        Interface(
             const Interface<interface_t>& other);          // Copy constructor
 
         virtual Interface<interface_t>& operator=(
             const Interface<interface_t>& other);          // Copy assignment
 
-        virtual Interface(Interface<interface_t>&& other); // Move constructor
+        Interface(Interface<interface_t>&& other); // Move constructor
 
         virtual Interface<interface_t>& operator=(
             Interface<interface_t>&& other);               // Move assignment
     
-    protected:
+      protected:
         /*/ Underlying interface access:
 
         Methods of the underlying interface may be accessed directly
@@ -103,8 +103,11 @@ namespace Cynth::API::WASAPI {
         Constructors should match the criteria listed in the section above
         except for the use of pointers when private.
         /*/
-        Interface(interface_t* ptr_instance);
-        Interface();
+      public:
+		Interface(interface_t* ptr_instance);
+		
+      protected:
+		Interface();
 
         // Pointer to the underlying interface instance:
         interface_t* ptr_instance;
